@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Профессиональный математический шифратор</title>
+    <title>Шифратор с настраиваемыми символами замены</title>
     <style>
         :root {
             --primary: #2c3e50;
@@ -148,6 +148,10 @@
             background: var(--error);
         }
         
+        .btn-generate {
+            background: var(--warning);
+        }
+        
         .result-container {
             margin-top: 20px;
             padding: 20px;
@@ -271,13 +275,23 @@
             background-color: #2ecc71;
             width: 100%;
         }
+        
+        .substitution-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .substitution-input {
+            flex: 1;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Профессиональный математический шифратор</h1>
-            <p class="subtitle">С гарантированной обратимостью и проверкой целостности</p>
+            <h1>Шифратор с настраиваемыми символами замены</h1>
+            <p class="subtitle">Полная настройка таблицы замен с проверкой соответствия алфавиту</p>
         </header>
         
         <div class="content">
@@ -289,6 +303,16 @@
                     <input type="text" id="alphabet" value="АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя .,!?-0123456789"
                            placeholder="Введите символы алфавита" oninput="validateAlphabet()">
                     <div id="alphabetStatus" class="status"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="substitutionAlphabet">Символы замены (должны соответствовать длине алфавита):</label>
+                    <div class="substitution-controls">
+                        <input type="text" id="substitutionAlphabet" class="substitution-input" 
+                               placeholder="Введите символы замены" oninput="validateSubstitutionAlphabet()">
+                        <button class="btn btn-generate" onclick="generateSubstitutionAlphabet()">Сгенерировать</button>
+                    </div>
+                    <div id="substitutionAlphabetStatus" class="status"></div>
                 </div>
                 
                 <div class="form-group">
@@ -410,7 +434,69 @@
             
             statusElement.className = 'status status-success';
             statusElement.innerHTML = `Алфавит корректен: ${alphabet.length} уникальных символов.`;
+            
+            // Проверяем соответствие символов замены
+            validateSubstitutionAlphabet();
+            
             return true;
+        }
+        
+        // Валидация символов замены
+        function validateSubstitutionAlphabet() {
+            const alphabet = document.getElementById('alphabet').value;
+            const substitutionAlphabet = document.getElementById('substitutionAlphabet').value;
+            const statusElement = document.getElementById('substitutionAlphabetStatus');
+            
+            if (!alphabet || alphabet.length < 10) {
+                statusElement.className = 'status status-warning';
+                statusElement.innerHTML = 'Сначала настройте основной алфавит.';
+                return false;
+            }
+            
+            if (substitutionAlphabet.length === 0) {
+                statusElement.className = 'status status-warning';
+                statusElement.innerHTML = 'Введите символы замены или сгенерируйте автоматически.';
+                return false;
+            }
+            
+            if (substitutionAlphabet.length !== alphabet.length) {
+                statusElement.className = 'status status-error';
+                statusElement.innerHTML = `Ошибка: Длина символов замены (${substitutionAlphabet.length}) не совпадает с длиной алфавита (${alphabet.length}).`;
+                return false;
+            }
+            
+            // Проверка на уникальность символов
+            const uniqueChars = new Set(substitutionAlphabet);
+            if (uniqueChars.size !== substitutionAlphabet.length) {
+                statusElement.className = 'status status-error';
+                statusElement.innerHTML = 'Ошибка: Символы замены содержат повторяющиеся символы.';
+                return false;
+            }
+            
+            statusElement.className = 'status status-success';
+            statusElement.innerHTML = `Символы замены корректны: ${substitutionAlphabet.length} уникальных символов.`;
+            return true;
+        }
+        
+        // Генерация символов замены
+        function generateSubstitutionAlphabet() {
+            const alphabet = document.getElementById('alphabet').value;
+            if (!alphabet || alphabet.length < 10) {
+                showStatus('Сначала настройте основной алфавит.', 'error');
+                return;
+            }
+            
+            // Создаем массив символов и перемешиваем его
+            const chars = alphabet.split('');
+            for (let i = chars.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [chars[i], chars[j]] = [chars[j], chars[i]];
+            }
+            
+            const substitutionAlphabet = chars.join('');
+            document.getElementById('substitutionAlphabet').value = substitutionAlphabet;
+            validateSubstitutionAlphabet();
+            showStatus('Символы замены сгенерированы.', 'success');
         }
         
         // Валидация пароля
@@ -464,9 +550,10 @@
         // Проверка всех параметров
         function validateAll() {
             const alphabetValid = validateAlphabet();
+            const substitutionValid = validateSubstitutionAlphabet();
             const passwordValid = validatePassword();
             
-            if (!alphabetValid || !passwordValid) {
+            if (!alphabetValid || !substitutionValid || !passwordValid) {
                 showStatus('Исправьте ошибки в параметрах шифрования.', 'error');
                 return false;
             }
@@ -491,18 +578,23 @@
         
         // Класс шифратора
         class ProfessionalMathCipher {
-            constructor(alphabet, password, operation) {
+            constructor(alphabet, substitutionAlphabet, password, operation) {
                 this.alphabet = alphabet;
+                this.substitutionAlphabet = substitutionAlphabet;
                 this.N = alphabet.length;
                 this.operation = operation;
                 
                 // Создаем маппинг символов в цифры и обратно
                 this.charToDigit = {};
                 this.digitToChar = {};
+                this.substitutionToDigit = {};
+                this.digitToSubstitution = {};
                 
                 for (let i = 0; i < this.N; i++) {
                     this.charToDigit[alphabet[i]] = i;
                     this.digitToChar[i] = alphabet[i];
+                    this.substitutionToDigit[substitutionAlphabet[i]] = i;
+                    this.digitToSubstitution[i] = substitutionAlphabet[i];
                 }
                 
                 // Генерируем ключи на основе пароля
@@ -633,7 +725,7 @@
                     this.substitutionTable.push({
                         originalChar: this.digitToChar[P],
                         originalValue: P,
-                        encryptedChar: this.digitToChar[C],
+                        encryptedChar: this.digitToSubstitution[C],
                         encryptedValue: C,
                         key: K
                     });
@@ -686,12 +778,12 @@
                             C = (this.matrix[0][0] * P + this.matrix[0][1] * P2) % this.N;
                             const C2 = (this.matrix[1][0] * P + this.matrix[1][1] * P2) % this.N;
                             
-                            result += this.digitToChar[C2];
-                            process += `"${nextChar}" → ${P2} → [Матричное преобразование] = ${C2} → "${this.digitToChar[C2]}"<br>`;
+                            result += this.digitToSubstitution[C2];
+                            process += `"${nextChar}" → ${P2} → [Матричное преобразование] = ${C2} → "${this.digitToSubstitution[C2]}"<br>`;
                             break;
                     }
                     
-                    const encryptedChar = this.digitToChar[C];
+                    const encryptedChar = this.digitToSubstitution[C];
                     result += encryptedChar;
                     
                     // Формируем информацию о процессе
@@ -720,14 +812,15 @@
                 for (let i = 0; i < text.length; i++) {
                     const char = text[i];
                     
-                    // Если символа нет в алфавите, добавляем как есть
-                    if (!(char in this.charToDigit)) {
+                    // Если символа нет в алфавите замены, пытаемся найти в основном
+                    if (!(char in this.substitutionToDigit) && !(char in this.charToDigit)) {
                         result += char;
                         process += `"${char}" → не в алфавите → "${char}"<br>`;
                         continue;
                     }
                     
-                    const C = this.charToDigit[char];
+                    // Определяем, откуда брать числовое значение
+                    const C = char in this.substitutionToDigit ? this.substitutionToDigit[char] : this.charToDigit[char];
                     let P;
                     
                     switch(this.operation) {
@@ -747,7 +840,8 @@
                             }
                             
                             const nextChar = i + 1 < text.length ? text[i + 1] : ' ';
-                            const C2 = nextChar in this.charToDigit ? this.charToDigit[nextChar] : 0;
+                            const C2 = nextChar in this.substitutionToDigit ? this.substitutionToDigit[nextChar] : 
+                                      (nextChar in this.charToDigit ? this.charToDigit[nextChar] : 0);
                             
                             P = (this.invMatrix[0][0] * C + this.invMatrix[0][1] * C2) % this.N;
                             const P2 = (this.invMatrix[1][0] * C + this.invMatrix[1][1] * C2) % this.N;
@@ -803,11 +897,12 @@
                 if (!validateAll()) return;
                 
                 const alphabet = document.getElementById('alphabet').value;
+                const substitutionAlphabet = document.getElementById('substitutionAlphabet').value;
                 const password = document.getElementById('password').value;
                 const operation = document.getElementById('mathOperation').value;
                 const inputText = document.getElementById('inputText').value;
                 
-                currentCipher = new ProfessionalMathCipher(alphabet, password, operation);
+                currentCipher = new ProfessionalMathCipher(alphabet, substitutionAlphabet, password, operation);
                 const encrypted = currentCipher.encrypt(inputText);
                 document.getElementById('outputText').value = encrypted;
                 
@@ -887,6 +982,7 @@
         // Инициализация при загрузке
         window.onload = function() {
             validateAlphabet();
+            generateSubstitutionAlphabet();
             showStatus('Готов к работе', 'success');
         };
     </script>
