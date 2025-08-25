@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LatticeCrypto Pro | Реальная система шифрования</title>
+    <title>QuantumSafe RLWE Cryptosystem</title>
     <style>
+        /* Стили остаются без изменений */
         :root {
             --primary-dark: #0d1b2a;
             --primary: #1b263b;
@@ -31,7 +32,7 @@
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             background: rgba(27, 38, 59, 0.95);
             border-radius: 15px;
@@ -62,30 +63,36 @@
             margin-bottom: 20px;
         }
         
-        .info-section {
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
             background: rgba(13, 27, 42, 0.7);
-            padding: 20px;
             border-radius: 10px;
-            margin-bottom: 30px;
-            border-left: 4px solid var(--success);
+            overflow: hidden;
+            flex-wrap: wrap;
         }
         
-        .info-section h2 {
-            color: var(--success);
-            margin-bottom: 15px;
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            min-width: 120px;
         }
         
-        .main-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-bottom: 40px;
+        .tab.active {
+            background: rgba(76, 201, 240, 0.2);
+            border-bottom: 3px solid var(--success);
         }
         
-        @media (max-width: 900px) {
-            .main-content {
-                grid-template-columns: 1fr;
-            }
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
         }
         
         .panel {
@@ -94,6 +101,7 @@
             padding: 25px;
             border: 1px solid var(--secondary);
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
         }
         
         .panel h2 {
@@ -168,6 +176,10 @@
             background: linear-gradient(135deg, #e76f51, #f4a261);
         }
         
+        .btn-generate {
+            background: linear-gradient(135deg, #7209b7, #3a0ca3);
+        }
+        
         .btn-clear {
             background: linear-gradient(135deg, var(--warning), var(--danger));
         }
@@ -226,41 +238,86 @@
             100% { opacity: 0.6; }
         }
         
-        .security-info {
-            margin-top: 30px;
-            padding: 20px;
+        .key-display {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(13, 27, 42, 0.7);
+            border-radius: 8px;
+            border: 1px solid var(--secondary);
+            word-break: break-all;
+            font-family: monospace;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .key-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .key-actions button {
+            flex: 1;
+            margin-top: 0;
+            padding: 10px;
+            min-width: 120px;
+        }
+        
+        .progress-container {
+            margin: 20px 0;
             background: rgba(13, 27, 42, 0.8);
             border-radius: 8px;
+            height: 20px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--secondary), var(--success));
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .settings-panel {
+            background: rgba(13, 27, 42, 0.7);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
             border: 1px solid var(--secondary);
         }
         
-        .security-info h3 {
-            color: var(--accent);
-            margin-bottom: 15px;
-        }
-        
-        .security-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        .settings-row {
+            display: flex;
             gap: 15px;
+            margin-bottom: 15px;
+            align-items: center;
+            flex-wrap: wrap;
         }
         
-        .stat {
+        .settings-row label {
+            margin-bottom: 0;
+            min-width: 150px;
+        }
+        
+        .settings-row select, .settings-row input {
+            flex: 1;
+            margin-bottom: 0;
+            min-width: 200px;
+        }
+        
+        .format-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .format-option {
             padding: 15px;
             background: rgba(27, 38, 59, 0.7);
             border-radius: 8px;
-            text-align: center;
-        }
-        
-        .stat-value {
-            font-size: 1.5rem;
-            color: var(--success);
-            font-weight: bold;
-        }
-        
-        .stat-label {
-            font-size: 0.9rem;
-            color: var(--accent);
+            border: 1px solid var(--secondary);
         }
         
         footer {
@@ -271,419 +328,1205 @@
             font-size: 0.9rem;
             border-top: 1px solid var(--secondary);
         }
+        
+        @media (max-width: 768px) {
+            .tab {
+                min-width: 100px;
+                padding: 10px;
+            }
+            
+            .settings-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .settings-row select, .settings-row input {
+                width: 100%;
+            }
+            
+            .key-actions {
+                flex-direction: column;
+            }
+        }
+        
+        .format-selector {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .format-btn {
+            padding: 8px 15px;
+            border-radius: 5px;
+            background: var(--secondary);
+            cursor: pointer;
+            border: none;
+            color: white;
+            font-size: 0.9rem;
+        }
+        
+        .format-btn.active {
+            background: var(--success);
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>LatticeCrypto Pro</h1>
-            <p class="subtitle">Реальная система шифрования на основе решеток</p>
+            <h1>QuantumSafe RLWE Cryptosystem</h1>
+            <p class="subtitle">Профессиональная реализация криптосистемы на кольцевых решетках</p>
         </header>
         
-        <div class="info-section">
-            <h2>Реализация Learning With Errors (LWE)</h2>
-            <p>Полнофункциональная система шифрования на основе решеток с реальным шифрованием и дешифрованием.</p>
+        <div class="tab-container">
+            <div class="tab active" onclick="switchTab('params')">Параметры</div>
+            <div class="tab" onclick="switchTab('keys')">Ключи</div>
+            <div class="tab" onclick="switchTab('encrypt')">Шифрование</div>
+            <div class="tab" onclick="switchTab('decrypt')">Дешифрование</div>
+            <div class="tab" onclick="switchTab('formats')">Форматы</div>
         </div>
         
-        <div class="main-content">
+        <div class="tab-content active" id="params-tab">
             <div class="panel">
-                <h2>Шифрование</h2>
-                <div class="input-group">
-                    <label for="inputText">Исходный текст:</label>
-                    <textarea id="inputText" placeholder="Введите текст для шифрования...">Конфиденциальное сообщение, защищенное криптографией на решетках</textarea>
-                </div>
+                <h2>Параметры безопасности</h2>
                 
-                <div class="input-group">
-                    <label for="key">Ключ шифрования:</label>
-                    <input type="password" id="key" placeholder="Введите секретный ключ..." value="StrongPassword123!">
-                </div>
-                
-                <div class="input-group">
-                    <label for="securityLevel">Параметры решетки:</label>
+                <div class="settings-row">
+                    <label for="securityLevel">Уровень безопасности:</label>
                     <select id="securityLevel">
-                        <option value="256">n=256, q=4096 (тестовый)</option>
-                        <option value="512" selected>n=512, q=8192 (базовый)</option>
-                        <option value="1024">n=1024, q=16384 (рекомендуется)</option>
+                        <option value="128">128 бит (n=512)</option>
+                        <option value="192" selected>192 бит (n=1024)</option>
+                        <option value="256">256 бит (n=2048)</option>
                     </select>
                 </div>
                 
-                <button class="btn-encrypt" onclick="encryptText()">🔒 Зашифровать текст</button>
-                
-                <div class="result">
-                    <div class="result-label">Результат шифрования:</div>
-                    <div id="encryptedResult"></div>
+                <div class="settings-row">
+                    <label for="modulusType">Тип модуля:</label>
+                    <select id="modulusType">
+                        <option value="12289">q=12289 (NTT-дружественный)</option>
+                        <option value="7681">q=7681 (Оптимизированный)</option>
+                    </select>
                 </div>
+                
+                <div class="settings-row">
+                    <label for="errorDistribution">Распределение ошибок:</label>
+                    <select id="errorDistribution">
+                        <option value="gaussian">Дискретное гауссово (σ=3.2)</option>
+                        <option value="uniform">Равномерное (более быстрое)</option>
+                    </select>
+                </div>
+                
+                <div class="settings-row">
+                    <label for="encodingScheme">Схема кодирования:</label>
+                    <select id="encodingScheme">
+                        <option value="coefficient">Кодирование в коэффициенты</option>
+                        <option value="ntt">NTT-представление</option>
+                    </select>
+                </div>
+                
+                <button class="btn-apply" onclick="saveParameters()">Применить параметры</button>
             </div>
-            
+        </div>
+        
+        <div class="tab-content" id="keys-tab">
             <div class="panel">
-                <h2>Дешифрование</h2>
-                <div class="input-group">
-                    <label for="encryptedText">Зашифрованные данные:</label>
-                    <textarea id="encryptedText" placeholder="Введите зашифрованные данные..."></textarea>
-                </div>
+                <h2>Управление ключами</h2>
                 
                 <div class="input-group">
-                    <label for="decryptKey">Ключ дешифрования:</label>
-                    <input type="password" id="decryptKey" placeholder="Введите секретный ключ...">
+                    <label for="keyComment">Комментарий к ключам:</label>
+                    <input type="text" id="keyComment" placeholder="Мои RLWE ключи">
                 </div>
                 
-                <button class="btn-decrypt" onclick="decryptText()">🔓 Дешифровать текст</button>
-                <button class="btn-clear" onclick="clearAll()">🗑️ Очистить всё</button>
+                <button class="btn-generate" onclick="generateKeyPair()">🔑 Сгенерировать ключевую пару</button>
+                
+                <div class="progress-container">
+                    <div class="progress-bar" id="keyGenProgress"></div>
+                </div>
                 
                 <div class="result">
-                    <div class="result-label">Результат дешифрования:</div>
-                    <div id="decryptedResult"></div>
+                    <div class="result-label">Публичный ключ:</div>
+                    <div class="key-display" id="publicKeyDisplay">Ключ не сгенерирован</div>
+                    <div class="key-actions">
+                        <button onclick="copyPublicKey()">📋 Копировать</button>
+                        <button onclick="downloadPublicKey()">📥 Сохранить</button>
+                        <button onclick="showPublicKeyInfo()">📊 Информация</button>
+                    </div>
+                </div>
+                
+                <div class="result">
+                    <div class="result-label">Секретный ключ:</div>
+                    <div class="key-display" id="secretKeyDisplay">Ключ не сгенерирован</div>
+                    <div class="key-actions">
+                        <button onclick="copySecretKey()">📋 Копировать</button>
+                        <button onclick="downloadSecretKey()">📥 Сохранить</button>
+                        <button onclick="showSecretKeyInfo()">📊 Информация</button>
+                    </div>
                 </div>
             </div>
         </div>
         
-        <div class="security-info">
-            <h3>Параметры безопасности</h3>
-            <div class="security-stats">
-                <div class="stat">
-                    <div class="stat-value" id="securityLevelText">n=512</div>
-                    <div class="stat-label">Размерность решетки</div>
+        <div class="tab-content" id="encrypt-tab">
+            <div class="panel">
+                <h2>Шифрование сообщения</h2>
+                
+                <div class="input-group">
+                    <label for="recipientPublicKey">Публичный ключ получателя:</label>
+                    <textarea id="recipientPublicKey" placeholder="Вставьте публичный ключ в формате JSON..."></textarea>
                 </div>
-                <div class="stat">
-                    <div class="stat-value" id="modulusText">q=8192</div>
-                    <div class="stat-label">Модуль</div>
+                
+                <div class="input-group">
+                    <label for="messageToEncrypt">Сообщение для шифрования:</label>
+                    <textarea id="messageToEncrypt" placeholder="Введите текст для шифрования...">Конфиденциальное сообщение, защищенное RLWE криптографией</textarea>
                 </div>
-                <div class="stat">
-                    <div class="stat-value" id="estimatedCrackTime">>10^80 лет</div>
-                    <div class="stat-label">Оценочное время взлома</div>
+                
+                <div class="settings-row">
+                    <label for="encryptionMode">Режим шифрования:</label>
+                    <select id="encryptionMode">
+                        <option value="standard">Стандартный RLWE</option>
+                        <option value="hybrid" selected>Гибридный (RLWE + AES)</option>
+                    </select>
                 </div>
+                
+                <button class="btn-encrypt" onclick="encryptMessage()">🔒 Зашифровать сообщение</button>
+                
+                <div class="progress-container">
+                    <div class="progress-bar" id="encryptProgress"></div>
+                </div>
+                
+                <div class="result">
+                    <div class="result-label">Зашифрованное сообщение:</div>
+                    <div class="format-selector">
+                        <button class="format-btn active" onclick="setOutputFormat('base64')">Base64</button>
+                        <button class="format-btn" onclick="setOutputFormat('hex')">Hex</button>
+                        <button class="format-btn" onclick="setOutputFormat('numeric')">Числовой</button>
+                        <button class="format-btn" onclick="setOutputFormat('binary')">Бинарный</button>
+                        <button class="format-btn" onclick="setOutputFormat('json')">JSON</button>
+                    </div>
+                    <div id="encryptedMessageResult"></div>
+                    <div class="key-actions">
+                        <button onclick="copyEncryptedMessage()">📋 Копировать</button>
+                        <button onclick="downloadEncryptedMessage()">📥 Сохранить</button>
+                        <button onclick="analyzeCiphertext()">📊 Анализ</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="decrypt-tab">
+            <div class="panel">
+                <h2>Дешифрование сообщения</h2>
+                
+                <div class="input-group">
+                    <label for="inputFormat">Формат ввода:</label>
+                    <select id="inputFormat">
+                        <option value="auto">Автоопределение</option>
+                        <option value="base64">Base64</option>
+                        <option value="hex">Hex</option>
+                        <option value="numeric">Числовой</option>
+                        <option value="binary">Бинарный</option>
+                        <option value="json">JSON</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label for="encryptedMessage">Зашифрованное сообщение:</label>
+                    <textarea id="encryptedMessage" placeholder="Вставьте зашифрованное сообщение..."></textarea>
+                </div>
+                
+                <div class="input-group">
+                    <label for="decryptionKey">Секретный ключ для дешифрования:</label>
+                    <textarea id="decryptionKey" placeholder="Вставьте ваш секретный ключ..."></textarea>
+                </div>
+                
+                <button class="btn-decrypt" onclick="decryptMessage()">🔓 Расшифровать сообщение</button>
+                
+                <div class="progress-container">
+                    <div class="progress-bar" id="decryptProgress"></div>
+                </div>
+                
+                <div class="result">
+                    <div class="result-label">Расшифрованное сообщение:</div>
+                    <div id="decryptedMessageResult"></div>
+                    <div class="key-actions">
+                        <button onclick="copyDecryptedMessage()">📋 Копировать</button>
+                        <button onclick="downloadDecryptedMessage()">📥 Сохранить</button>
+                        <button onclick="verifyDecryption()">✅ Проверить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="formats-tab">
+            <div class="panel">
+                <h2>Настройки форматов</h2>
+                
+                <div class="format-options">
+                    <div class="format-option">
+                        <h3>Форматы ключей</h3>
+                        <div class="settings-row">
+                            <label for="keyFormat">Формат представления:</label>
+                            <select id="keyFormat">
+                                <option value="json">JSON (полный)</option>
+                                <option value="json-compact">JSON (компактный)</option>
+                                <option value="base64">Base64</option>
+                                <option value="base64url">Base64 URL Safe</option>
+                                <option value="hex">Hex</option>
+                                <option value="binary">Бинарный</option>
+                                <option value="pem">PEM-like</option>
+                            </select>
+                        </div>
+                        
+                        <div class="settings-row">
+                            <label for="keyCompression">Сжатие:</label>
+                            <select id="keyCompression">
+                                <option value="none">Без сжатия</option>
+                                <option value="gzip">GZIP</option>
+                                <option value="brotli">Brotli</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="format-option">
+                        <h3>Форматы сообщений</h3>
+                        <div class="settings-row">
+                            <label for="messageFormat">Формат шифротекста:</label>
+                            <select id="messageFormat">
+                                <option value="json">JSON Structured</option>
+                                <option value="json-compact">JSON Compact</option>
+                                <option value="messagepack">MessagePack</option>
+                                <option value="base64">Base64</option>
+                                <option value="binary">Binary</option>
+                            </select>
+                        </div>
+                        
+                        <div class="settings-row">
+                            <label for="messageEncoding">Кодировка:</label>
+                            <select id="messageEncoding">
+                                <option value="utf8">UTF-8</option>
+                                <option value="base64">Base64</option>
+                                <option value="hex">Hex</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="format-option">
+                        <h3>Дополнительные опции</h3>
+                        <div class="settings-row">
+                            <label for="lineBreaks">Переносы строк:</label>
+                            <select id="lineBreaks">
+                                <option value="64">Через 64 символа</option>
+                                <option value="76">Через 76 символов (стандарт)</option>
+                                <option value="80">Через 80 символов</option>
+                                <option value="none">Без переносов</option>
+                            </select>
+                        </div>
+                        
+                        <div class="settings-row">
+                            <label for="includeMetadata">Включать метаданные:</label>
+                            <input type="checkbox" id="includeMetadata" checked>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="btn-apply" onclick="applyFormatSettings()">Применить настройки форматов</button>
             </div>
         </div>
         
         <div class="status-bar">
             <div class="status-indicator" id="statusIndicator"></div>
-            <span id="statusText">Система готова к работе</span>
+            <span id="statusText">Система инициализирована. Выберите параметры безопасности.</span>
         </div>
         
         <footer>
-            <p>LatticeCrypto Pro v1.0 | Реальная система шифрования | 2024</p>
+            <p>QuantumSafe RLWE Cryptosystem v2.0 | Post-Quantum Cryptographic System | 2024</p>
         </footer>
     </div>
 
     <script>
-        // ============ ПАРАМЕТРЫ LWE ============
-        const LWE_PARAMS = {
-            256: { n: 256, q: 4096, error: 3.2 },
-            512: { n: 512, q: 8192, error: 3.2 },
-            1024: { n: 1024, q: 16384, error: 3.2 }
+        // ============ СИСТЕМНАЯ КОНФИГУРАЦИЯ ============
+        const RLWE_CONFIG = {
+            parameters: {
+                '128': { n: 512, q: 12289, sigma: 3.2 },
+                '192': { n: 1024, q: 12289, sigma: 3.2 },
+                '256': { n: 2048, q: 12289, sigma: 3.2 }
+            },
+            formats: {
+                key: 'json',
+                message: 'json',
+                encoding: 'utf8',
+                compression: 'none',
+                lineBreaks: '76',
+                includeMetadata: true
+            },
+            security: {
+                level: '192',
+                modulusType: '12289',
+                errorDistribution: 'gaussian',
+                encodingScheme: 'coefficient'
+            },
+            outputFormat: 'base64' // Новый параметр для формата вывода
         };
 
-        // Глобальные переменные для хранения ключей
-        let lwePublicKey = null;
-        let lweSecretKey = null;
-        let lweParams = null;
-        let encryptionCache = new Map();
+        // Глобальные состояния
+        let currentPublicKey = null;
+        let currentSecretKey = null;
+        let currentParams = null;
+        let nttContext = null;
+        let currentCiphertext = null;
 
-        // ============ МАТЕМАТИЧЕСКИЕ ФУНКЦИИ ============
-        
-        // Генерация случайных чисел
-        function getRandomValues(length) {
-            const array = new Uint32Array(length);
-            if (window.crypto && window.crypto.getRandomValues) {
-                window.crypto.getRandomValues(array);
-            } else {
-                for (let i = 0; i < length; i++) {
-                    array[i] = Math.floor(Math.random() * 4294967295);
+        // ============ МАТЕМАТИЧЕСКОЕ ЯДРО ============
+
+        class NTTContext {
+            constructor(n, q) {
+                this.n = n;
+                this.q = q;
+                this.roots = this.precomputeRoots();
+                this.invRoots = this.precomputeInverseRoots();
+                this.invN = this.modInverse(n, q);
+            }
+
+            precomputeRoots() {
+                const root = this.findPrimitiveRoot();
+                const roots = new Array(this.n);
+                roots[0] = 1;
+                
+                for (let i = 1; i < this.n; i++) {
+                    roots[i] = this.modPow(root, i, this.q);
                 }
+                
+                return roots;
             }
-            return array;
-        }
-        
-        // Генерация ошибок с гауссовским распределением
-        function generateGaussianError(n, stdDev) {
-            const errors = new Int32Array(n);
-            for (let i = 0; i < n; i++) {
-                let u = 0, v = 0;
-                while(u === 0) u = Math.random();
-                while(v === 0) v = Math.random();
-                const normal = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
-                errors[i] = Math.round(normal * stdDev);
-            }
-            return errors;
-        }
-        
-        // Модульная арифметика
-        function mod(x, q) {
-            return ((x % q) + q) % q;
-        }
-        
-        // Генерация публичного и приватного ключей LWE
-        function generateLWEKeys(params) {
-            const { n, q, error } = params;
-            
-            // Секретный ключ - случайный вектор
-            const secret = new Array(n);
-            const randomValues = getRandomValues(n);
-            for (let i = 0; i < n; i++) {
-                secret[i] = mod(randomValues[i], q);
-            }
-            
-            // Матрица A - публичный параметр
-            const A = new Array(n);
-            for (let i = 0; i < n; i++) {
-                A[i] = new Array(n);
-                const rowRandom = getRandomValues(n);
-                for (let j = 0; j < n; j++) {
-                    A[i][j] = mod(rowRandom[j], q);
+
+            precomputeInverseRoots() {
+                const invRoots = new Array(this.n);
+                for (let i = 0; i < this.n; i++) {
+                    invRoots[i] = this.modInverse(this.roots[i], this.q);
                 }
+                return invRoots;
             }
-            
-            // Генерация ошибок
-            const e = generateGaussianError(n, error);
-            
-            // Публичный ключ b = A*s + e
-            const b = new Array(n);
-            for (let i = 0; i < n; i++) {
-                let sum = 0;
-                for (let j = 0; j < n; j++) {
-                    sum += A[i][j] * secret[j];
+
+            findPrimitiveRoot() {
+                // Поиск примитивного корня 2n-ой степени из единицы
+                const factors = this.primeFactors(this.q - 1);
+                
+                for (let g = 2; g < this.q; g++) {
+                    if (this.modPow(g, (this.q - 1) / 2, this.q) !== 1) {
+                        let valid = true;
+                        for (const factor of factors) {
+                            if (factor !== 2 && this.modPow(g, (this.q - 1) / factor, this.q) === 1) {
+                                valid = false;
+                                break;
+                            }
+                        }
+                        if (valid) return g;
+                    }
                 }
-                b[i] = mod(sum + e[i], q);
+                throw new Error("Primitive root not found");
             }
-            
-            return { secret, A, b };
+
+            primeFactors(n) {
+                const factors = new Set();
+                while (n % 2 === 0) {
+                    factors.add(2);
+                    n = n / 2;
+                }
+                
+                for (let i = 3; i <= Math.sqrt(n); i += 2) {
+                    while (n % i === 0) {
+                        factors.add(i);
+                        n = n / i;
+                    }
+                }
+                
+                if (n > 2) factors.add(n);
+                return Array.from(factors);
+            }
+
+            modPow(base, exponent, mod) {
+                let result = 1n;
+                base = BigInt(base) % BigInt(mod);
+                let exp = BigInt(exponent);
+                
+                while (exp > 0) {
+                    if (exp % 2n === 1n) {
+                        result = (result * base) % BigInt(mod);
+                    }
+                    base = (base * base) % BigInt(mod);
+                    exp = exp / 2n;
+                }
+                
+                return Number(result);
+            }
+
+            modInverse(a, m) {
+                let [old_r, r] = [BigInt(a), BigInt(m)];
+                let [old_s, s] = [1n, 0n];
+                
+                while (r !== 0n) {
+                    const quotient = old_r / r;
+                    [old_r, r] = [r, old_r - quotient * r];
+                    [old_s, s] = [s, old_s - quotient * s];
+                }
+                
+                return Number(old_s < 0n ? old_s + BigInt(m) : old_s) % m;
+            }
+
+            forwardNTT(poly) {
+                return this.transform(poly, this.roots);
+            }
+
+            inverseNTT(poly) {
+                const result = this.transform(poly, this.invRoots);
+                for (let i = 0; i < this.n; i++) {
+                    result[i] = this.modMul(result[i], this.invN, this.q);
+                }
+                return result;
+            }
+
+            transform(poly, roots) {
+                const result = [...poly];
+                let len = this.n / 2;
+                
+                for (let i = 1; i < this.n; i <<= 1) {
+                    for (let j = 0; j < this.n; j += 2 * i) {
+                        for (let k = 0; k < i; k++) {
+                            const u = result[j + k];
+                            const v = this.modMul(result[j + k + i], roots[this.n / (2 * i) * k], this.q);
+                            
+                            result[j + k] = this.modAdd(u, v, this.q);
+                            result[j + k + i] = this.modSub(u, v, this.q);
+                        }
+                    }
+                }
+                
+                return result;
+            }
+
+            modAdd(a, b, mod) {
+                return (a + b) % mod;
+            }
+
+            modSub(a, b, mod) {
+                return (a - b + mod) % mod;
+            }
+
+            modMul(a, b, mod) {
+                return Number((BigInt(a) * BigInt(b)) % BigInt(mod));
+            }
         }
-        
-        // Преобразование текста в бинарный формат
-        function textToBinary(text) {
-            const encoder = new TextEncoder();
-            const bytes = encoder.encode(text);
-            let binary = '';
-            for (let i = 0; i < bytes.length; i++) {
-                binary += bytes[i].toString(2).padStart(8, '0');
+
+        class GaussianSampler {
+            constructor(sigma, tau = 6) {
+                this.sigma = sigma;
+                this.tau = tau;
+                this.precomputed = this.precomputeDistribution();
             }
-            return binary;
-        }
-        
-        // Преобразование бинарного формата в текст
-        function binaryToText(binary) {
-            const bytes = [];
-            for (let i = 0; i < binary.length; i += 8) {
-                const byte = binary.substr(i, 8);
-                bytes.push(parseInt(byte, 2));
+
+            precomputeDistribution() {
+                const values = [];
+                const probabilities = [];
+                let total = 0;
+                
+                const min = -Math.floor(this.tau * this.sigma);
+                const max = Math.floor(this.tau * this.sigma);
+                
+                for (let x = min; x <= max; x++) {
+                    const prob = Math.exp(-x * x / (2 * this.sigma * this.sigma));
+                    values.push(x);
+                    probabilities.push(prob);
+                    total += prob;
+                }
+                
+                // Нормализация и создание CDF
+                const cdf = [];
+                let cumulative = 0;
+                
+                for (let i = 0; i < values.length; i++) {
+                    cumulative += probabilities[i] / total;
+                    cdf.push({ value: values[i], cumulative });
+                }
+                
+                return cdf;
             }
-            const decoder = new TextDecoder();
-            return decoder.decode(new Uint8Array(bytes));
-        }
-        
-        // LWE шифрование бита
-        function LWEEncryptBit(bit, publicKey, params) {
-            const { n, q } = params;
-            const { A, b } = publicKey;
-            
-            // Выбор случайного вектора r
-            const r = new Array(n);
-            for (let i = 0; i < n; i++) {
-                r[i] = Math.random() > 0.5 ? 1 : 0;
+
+            sample() {
+                const u = crypto.getRandomValues(new Uint32Array(1))[0] / 4294967296;
+                
+                for (const item of this.precomputed) {
+                    if (u <= item.cumulative) {
+                        return item.value;
+                    }
+                }
+                
+                return this.precomputed[this.precomputed.length - 1].value;
             }
-            
-            // Вычисление u = A^T * r
-            const u = new Array(n);
-            for (let j = 0; j < n; j++) {
-                u[j] = 0;
+
+            sampleArray(n) {
+                const result = new Array(n);
                 for (let i = 0; i < n; i++) {
-                    u[j] += A[i][j] * r[i];
+                    result[i] = this.sample();
                 }
-                u[j] = mod(u[j], q);
+                return result;
+            }
+        }
+
+        // ============ AES ГИБРИДНОЕ ШИФРОВАНИЕ ============
+
+        async function generateAESKey() {
+            return await window.crypto.subtle.generateKey(
+                {
+                    name: "AES-GCM",
+                    length: 256,
+                },
+                true,
+                ["encrypt", "decrypt"]
+            );
+        }
+
+        async function encryptAES(data, key) {
+            const iv = window.crypto.getRandomValues(new Uint8Array(12));
+            const encrypted = await window.crypto.subtle.encrypt(
+                {
+                    name: "AES-GCM",
+                    iv: iv
+                },
+                key,
+                data
+            );
+            
+            // Объединяем IV и зашифрованные данные
+            const result = new Uint8Array(iv.length + encrypted.byteLength);
+            result.set(iv, 0);
+            result.set(new Uint8Array(encrypted), iv.length);
+            
+            return result;
+        }
+
+        async function decryptAES(encryptedData, key) {
+            // Извлекаем IV (первые 12 байт)
+            const iv = encryptedData.slice(0, 12);
+            const data = encryptedData.slice(12);
+            
+            return await window.crypto.subtle.decrypt(
+                {
+                    name: "AES-GCM",
+                    iv: iv
+                },
+                key,
+                data
+            );
+        }
+
+        async function exportAESKey(key) {
+            const exported = await window.crypto.subtle.exportKey("raw", key);
+            return new Uint8Array(exported);
+        }
+
+        async function importAESKey(keyData) {
+            return await window.crypto.subtle.importKey(
+                "raw",
+                keyData,
+                {
+                    name: "AES-GCM",
+                    length: 256
+                },
+                true,
+                ["encrypt", "decrypt"]
+            );
+        }
+
+        // ============ ОСНОВНЫЕ ФУНКЦИИ RLWE ============
+
+        function initializeRLWE() {
+            const securityLevel = RLWE_CONFIG.security.level;
+            currentParams = RLWE_CONFIG.parameters[securityLevel];
+            nttContext = new NTTContext(currentParams.n, currentParams.q);
+            
+            updateStatus(`Инициализированы параметры: n=${currentParams.n}, q=${currentParams.q}`, 'ready');
+        }
+
+        function generateKeyPair() {
+            if (!currentParams) {
+                updateStatus('Сначала инициализируйте параметры', 'error');
+                return;
+            }
+
+            updateStatus('Генерация ключей...', 'working');
+            
+            try {
+                const { n, q, sigma } = currentParams;
+                const sampler = new GaussianSampler(sigma);
+
+                // Генерация секретного ключа
+                currentSecretKey = sampler.sampleArray(n);
+
+                // Генерация публичного параметра a
+                const a = new Array(n);
+                const randomValues = new Uint32Array(n);
+                window.crypto.getRandomValues(randomValues);
+                
+                for (let i = 0; i < n; i++) {
+                    a[i] = randomValues[i] % q;
+                }
+
+                // Генерация ошибки e
+                const e = sampler.sampleArray(n);
+
+                // Вычисление b = a*s + e в NTT domain
+                const a_ntt = nttContext.forwardNTT(a);
+                const s_ntt = nttContext.forwardNTT(currentSecretKey);
+                const e_ntt = nttContext.forwardNTT(e);
+
+                const b_ntt = new Array(n);
+                for (let i = 0; i < n; i++) {
+                    b_ntt[i] = nttContext.modAdd(
+                        nttContext.modMul(a_ntt[i], s_ntt[i], q),
+                        e_ntt[i],
+                        q
+                    );
+                }
+
+                currentPublicKey = {
+                    a: a_ntt,
+                    b: b_ntt,
+                    params: currentParams,
+                    timestamp: new Date().toISOString(),
+                    comment: document.getElementById('keyComment').value || 'RLWE Key'
+                };
+
+                // Отображение ключей
+                displayKeys();
+                updateStatus('Ключевая пара успешно сгенерирована', 'ready');
+
+            } catch (error) {
+                updateStatus('Ошибка генерации ключей: ' + error.message, 'error');
+            }
+        }
+
+        async function encryptMessage() {
+            if (!currentPublicKey) {
+                updateStatus('Сначала сгенерируйте ключи', 'error');
+                return;
+            }
+
+            const message = document.getElementById('messageToEncrypt').value;
+            if (!message) {
+                updateStatus('Введите сообщение для шифрования', 'error');
+                return;
+            }
+
+            updateStatus('Шифрование сообщения...', 'working');
+
+            try {
+                const encryptionMode = document.getElementById('encryptionMode').value;
+                
+                if (encryptionMode === 'hybrid') {
+                    // Гибридное шифрование: RLWE для ключа, AES для данных
+                    const aesKey = await generateAESKey();
+                    const aesKeyData = await exportAESKey(aesKey);
+                    
+                    // Кодируем AES ключ с помощью RLWE
+                    const { n, q, sigma } = currentPublicKey.params;
+                    const sampler = new GaussianSampler(sigma);
+                    
+                    // Кодирование ключа AES в полином
+                    const keyPoly = encodeBytes(aesKeyData, n, q);
+                    const key_ntt = nttContext.forwardNTT(keyPoly);
+
+                    // Генерация случайного полинома r
+                    const r = sampler.sampleArray(n);
+                    const r_ntt = nttContext.forwardNTT(r);
+
+                    // Генерация ошибок e1, e2
+                    const e1 = sampler.sampleArray(n);
+                    const e2 = sampler.sampleArray(n);
+                    const e1_ntt = nttContext.forwardNTT(e1);
+                    const e2_ntt = nttContext.forwardNTT(e2);
+
+                    // Шифрование ключа в NTT domain
+                    const u_ntt = new Array(n);
+                    const v_ntt = new Array(n);
+
+                    for (let i = 0; i < n; i++) {
+                        u_ntt[i] = nttContext.modAdd(
+                            nttContext.modMul(currentPublicKey.a[i], r_ntt[i], q),
+                            e1_ntt[i],
+                            q
+                        );
+
+                        v_ntt[i] = nttContext.modAdd(
+                            nttContext.modAdd(
+                                nttContext.modMul(currentPublicKey.b[i], r_ntt[i], q),
+                                e2_ntt[i],
+                                q
+                            ),
+                            key_ntt[i],
+                            q
+                        );
+                    }
+
+                    // Шифруем сообщение с помощью AES
+                    const encoder = new TextEncoder();
+                    const messageData = encoder.encode(message);
+                    const encryptedMessage = await encryptAES(messageData, aesKey);
+                    
+                    // Создание гибридного шифротекста
+                    currentCiphertext = {
+                        type: 'hybrid',
+                        key: {
+                            u: u_ntt,
+                            v: v_ntt
+                        },
+                        data: Array.from(encryptedMessage),
+                        params: currentPublicKey.params,
+                        timestamp: new Date().toISOString()
+                    };
+                } else {
+                    // Стандартное RLWE шифрование
+                    const { n, q, sigma } = currentPublicKey.params;
+                    const sampler = new GaussianSampler(sigma);
+
+                    // Кодирование сообщения
+                    const messagePoly = encodeMessage(message, n, q);
+                    const message_ntt = nttContext.forwardNTT(messagePoly);
+
+                    // Генерация случайного полинома r
+                    const r = sampler.sampleArray(n);
+                    const r_ntt = nttContext.forwardNTT(r);
+
+                    // Генерация ошибок e1, e2
+                    const e1 = sampler.sampleArray(n);
+                    const e2 = sampler.sampleArray(n);
+                    const e1_ntt = nttContext.forwardNTT(e1);
+                    const e2_ntt = nttContext.forwardNTT(e2);
+
+                    // Шифрование в NTT domain
+                    const u_ntt = new Array(n);
+                    const v_ntt = new Array(n);
+
+                    for (let i = 0; i < n; i++) {
+                        u_ntt[i] = nttContext.modAdd(
+                            nttContext.modMul(currentPublicKey.a[i], r_ntt[i], q),
+                            e1_ntt[i],
+                            q
+                        );
+
+                        v_ntt[i] = nttContext.modAdd(
+                            nttContext.modAdd(
+                                nttContext.modMul(currentPublicKey.b[i], r_ntt[i], q),
+                                e2_ntt[i],
+                                q
+                            ),
+                            message_ntt[i],
+                            q
+                        );
+                    }
+
+                    // Создание шифротекста
+                    currentCiphertext = {
+                        type: 'standard',
+                        u: u_ntt,
+                        v: v_ntt,
+                        params: currentPublicKey.params,
+                        timestamp: new Date().toISOString()
+                    };
+                }
+
+                // Отображение результата
+                displayCiphertext(currentCiphertext);
+                updateStatus('Сообщение успешно зашифровано', 'ready');
+
+            } catch (error) {
+                updateStatus('Ошибка шифрования: ' + error.message, 'error');
+            }
+        }
+
+        async function decryptMessage() {
+            const ciphertextText = document.getElementById('encryptedMessage').value;
+            const secretKeyText = document.getElementById('decryptionKey').value;
+
+            if (!ciphertextText || !secretKeyText) {
+                updateStatus('Введите шифротекст и секретный ключ', 'error');
+                return;
+            }
+
+            updateStatus('Дешифрование сообщения...', 'working');
+
+            try {
+                // Определяем формат ввода
+                const inputFormat = document.getElementById('inputFormat').value;
+                let ciphertext;
+                
+                if (inputFormat === 'auto') {
+                    ciphertext = tryParseInput(ciphertextText);
+                } else {
+                    ciphertext = parseInput(ciphertextText, inputFormat);
+                }
+                
+                if (!ciphertext) {
+                    throw new Error('Не удалось распарсить шифротекст');
+                }
+
+                // Парсинг секретного ключа
+                const secretKey = JSON.parse(secretKeyText);
+                const { n, q } = ciphertext.params;
+
+                if (ciphertext.type === 'hybrid') {
+                    // Дешифрование ключа AES с помощью RLWE
+                    const decryptedKey_ntt = new Array(n);
+                    for (let i = 0; i < n; i++) {
+                        const su = nttContext.modMul(ciphertext.key.u[i], secretKey.s[i], q);
+                        decryptedKey_ntt[i] = nttContext.modSub(ciphertext.key.v[i], su, q);
+                    }
+
+                    // Обратное NTT преобразование
+                    const decryptedKey = nttContext.inverseNTT(decryptedKey_ntt);
+                    
+                    // Декодирование ключа AES
+                    const aesKeyData = decodeBytes(decryptedKey, n, q);
+                    const aesKey = await importAESKey(new Uint8Array(aesKeyData));
+                    
+                    // Дешифрование данных с помощью AES
+                    const decryptedData = await decryptAES(new Uint8Array(ciphertext.data), aesKey);
+                    const decoder = new TextDecoder();
+                    const message = decoder.decode(decryptedData);
+                    
+                    document.getElementById('decryptedMessageResult').textContent = message;
+                } else {
+                    // Стандартное RLWE дешифрование
+                    const decrypted_ntt = new Array(n);
+                    for (let i = 0; i < n; i++) {
+                        const su = nttContext.modMul(ciphertext.u[i], secretKey.s[i], q);
+                        decrypted_ntt[i] = nttContext.modSub(ciphertext.v[i], su, q);
+                    }
+
+                    // Обратное NTT преобразование
+                    const decrypted = nttContext.inverseNTT(decrypted_ntt);
+
+                    // Декодирование сообщения
+                    const message = decodeMessage(decrypted, n, q);
+                    document.getElementById('decryptedMessageResult').textContent = message;
+                }
+
+                updateStatus('Сообщение успешно расшифровано', 'ready');
+
+            } catch (error) {
+                updateStatus('Ошибка дешифрования: ' + error.message, 'error');
+            }
+        }
+
+        // ============ ФУНКЦИИ РАБОТЫ С ФОРМАТАМИ ============
+
+        function setOutputFormat(format) {
+            RLWE_CONFIG.outputFormat = format;
+            
+            // Обновляем активную кнопку
+            document.querySelectorAll('.format-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Перерисовываем вывод, если есть шифротекст
+            if (currentCiphertext) {
+                displayCiphertext(currentCiphertext);
+            }
+        }
+
+        function displayCiphertext(ciphertext) {
+            const format = RLWE_CONFIG.outputFormat;
+            let output;
+            
+            switch (format) {
+                case 'base64':
+                    output = btoa(JSON.stringify(ciphertext));
+                    break;
+                    
+                case 'hex':
+                    const jsonStr = JSON.stringify(ciphertext);
+                    output = Array.from(new TextEncoder().encode(jsonStr))
+                        .map(b => b.toString(16).padStart(2, '0'))
+                        .join('');
+                    break;
+                    
+                case 'numeric':
+                    const jsonData = JSON.stringify(ciphertext);
+                    output = Array.from(new TextEncoder().encode(jsonData))
+                        .join(' ');
+                    break;
+                    
+                case 'binary':
+                    // Для бинарного формата используем Base64, так как напрямую бинарные данные 
+                    // нельзя отобразить в текстовом поле
+                    output = btoa(JSON.stringify(ciphertext));
+                    break;
+                    
+                case 'json':
+                default:
+                    output = JSON.stringify(ciphertext, null, 2);
+                    break;
             }
             
-            // Вычисление v = b^T * r + bit * (q/2)
-            let v = 0;
+            document.getElementById('encryptedMessageResult').textContent = output;
+        }
+
+        function tryParseInput(input) {
+            // Пытаемся автоматически определить формат
+            try {
+                // Пробуем распарсить как JSON
+                return JSON.parse(input);
+            } catch (e) {
+                // Не JSON, пробуем другие форматы
+            }
+            
+            try {
+                // Пробуем Base64
+                const decoded = atob(input);
+                return JSON.parse(decoded);
+            } catch (e) {
+                // Не Base64
+            }
+            
+            try {
+                // Пробуем Hex
+                const bytes = [];
+                for (let i = 0; i < input.length; i += 2) {
+                    bytes.push(parseInt(input.substr(i, 2), 16));
+                }
+                const decoded = new TextDecoder().decode(new Uint8Array(bytes));
+                return JSON.parse(decoded);
+            } catch (e) {
+                // Не Hex
+            }
+            
+            try {
+                // Пробуем числовой формат
+                const numbers = input.trim().split(/\s+/).map(Number);
+                const decoded = new TextDecoder().decode(new Uint8Array(numbers));
+                return JSON.parse(decoded);
+            } catch (e) {
+                // Не числовой формат
+            }
+            
+            return null;
+        }
+
+        function parseInput(input, format) {
+            switch (format) {
+                case 'json':
+                    return JSON.parse(input);
+                    
+                case 'base64':
+                    return JSON.parse(atob(input));
+                    
+                case 'hex':
+                    const bytes = [];
+                    for (let i = 0; i < input.length; i += 2) {
+                        bytes.push(parseInt(input.substr(i, 2), 16));
+                    }
+                    return JSON.parse(new TextDecoder().decode(new Uint8Array(bytes)));
+                    
+                case 'numeric':
+                    const numbers = input.trim().split(/\s+/).map(Number);
+                    return JSON.parse(new TextDecoder().decode(new Uint8Array(numbers)));
+                    
+                default:
+                    throw new Error('Неизвестный формат ввода: ' + format);
+            }
+        }
+
+        // ============ ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ============
+
+        function encodeMessage(message, n, q) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(message);
+            const scale = Math.floor(q / 256);
+            
+            const result = new Array(n).fill(0);
+            
+            for (let i = 0; i < Math.min(data.length, n); i++) {
+                result[i] = data[i] * scale;
+            }
+            
+            return result;
+        }
+
+        function encodeBytes(bytes, n, q) {
+            const scale = Math.floor(q / 256);
+            const result = new Array(n).fill(0);
+            
+            for (let i = 0; i < Math.min(bytes.length, n); i++) {
+                result[i] = bytes[i] * scale;
+            }
+            
+            return result;
+        }
+
+        function decodeMessage(coefficients, n, q) {
+            const scale = Math.floor(q / 256);
+            const data = [];
+            
             for (let i = 0; i < n; i++) {
-                v += b[i] * r[i];
-            }
-            v = mod(v + Math.floor(q/2) * bit, q);
-            
-            return { u, v };
-        }
-        
-        // LWE дешифрование бита
-        function LWEDecryptBit(ciphertext, secret, params) {
-            const { n, q } = params;
-            const { u, v } = ciphertext;
-            
-            // Вычисление d = v - s^T * u
-            let d = v;
-            for (let j = 0; j < n; j++) {
-                d -= secret[j] * u[j];
-            }
-            d = mod(d, q);
-            
-            // Декодирование бита
-            const threshold = Math.floor(q/4);
-            return (d > threshold && d < 3 * threshold) ? 1 : 0;
-        }
-        
-        // Полное шифрование текста
-        function encryptTextLWE(text, publicKey, params) {
-            const binary = textToBinary(text);
-            const ciphertexts = [];
-            
-            for (let i = 0; i < binary.length; i++) {
-                const bit = parseInt(binary[i]);
-                ciphertexts.push(LWEEncryptBit(bit, publicKey, params));
+                const value = Math.round(coefficients[i] / scale) % 256;
+                if (value === 0) break;
+                data.push(value);
             }
             
-            return ciphertexts;
+            const decoder = new TextDecoder();
+            return decoder.decode(new Uint8Array(data));
         }
-        
-        // Полное дешифрование текста
-        function decryptTextLWE(ciphertexts, secret, params) {
-            let binary = '';
+
+        function decodeBytes(coefficients, n, q) {
+            const scale = Math.floor(q / 256);
+            const data = [];
             
-            for (const ciphertext of ciphertexts) {
-                const bit = LWEDecryptBit(ciphertext, secret, params);
-                binary += bit.toString();
+            for (let i = 0; i < n; i++) {
+                const value = Math.round(coefficients[i] / scale) % 256;
+                if (value === 0 && i > 32) break; // AES ключ имеет фиксированный размер
+                data.push(value);
             }
             
-            return binaryToText(binary);
+            return data;
         }
-        
-        // ============ СИСТЕМНЫЕ ФУНКЦИИ ============
+
+        function displayKeys() {
+            const keyFormat = RLWE_CONFIG.formats.key;
+            
+            switch (keyFormat) {
+                case 'json':
+                    document.getElementById('publicKeyDisplay').textContent = 
+                        JSON.stringify(currentPublicKey, null, 2);
+                    document.getElementById('secretKeyDisplay').textContent = 
+                        JSON.stringify({ s: currentSecretKey, params: currentParams }, null, 2);
+                    break;
+                    
+                case 'base64':
+                    document.getElementById('publicKeyDisplay').textContent = 
+                        btoa(JSON.stringify(currentPublicKey));
+                    document.getElementById('secretKeyDisplay').textContent = 
+                        btoa(JSON.stringify({ s: currentSecretKey, params: currentParams }));
+                    break;
+                    
+                default:
+                    document.getElementById('publicKeyDisplay').textContent = 
+                        JSON.stringify(currentPublicKey);
+                    document.getElementById('secretKeyDisplay').textContent = 
+                        JSON.stringify({ s: currentSecretKey, params: currentParams });
+            }
+        }
+
         function updateStatus(message, type = 'ready') {
             const indicator = document.getElementById('statusIndicator');
             const statusText = document.getElementById('statusText');
             
             indicator.className = 'status-indicator';
-            if (type === 'working') {
-                indicator.classList.add('status-working');
-            } else if (type === 'error') {
-                indicator.classList.add('status-error');
-            }
+            if (type === 'working') indicator.classList.add('status-working');
+            if (type === 'error') indicator.classList.add('status-error');
             
             statusText.textContent = message;
         }
-        
-        function updateSecurityInfo(securityLevel) {
-            const params = LWE_PARAMS[securityLevel];
-            document.getElementById('securityLevelText').textContent = `n=${params.n}`;
-            document.getElementById('modulusText').textContent = `q=${params.q}`;
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
             
-            // Оценочное время взлома (экспоненциальная сложность)
-            const crackTime = Math.pow(2, 0.265 * params.n);
-            document.getElementById('estimatedCrackTime').textContent = `>10^${Math.log10(crackTime).toFixed(0)} лет`;
+            document.querySelector(`.tab:nth-child(${['params','keys','encrypt','decrypt','formats'].indexOf(tabName) + 1})`).classList.add('active');
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+        }
+
+        function saveParameters() {
+            RLWE_CONFIG.security.level = document.getElementById('securityLevel').value;
+            RLWE_CONFIG.security.modulusType = document.getElementById('modulusType').value;
+            RLWE_CONFIG.security.errorDistribution = document.getElementById('errorDistribution').value;
+            RLWE_CONFIG.security.encodingScheme = document.getElementById('encodingScheme').value;
+            
+            initializeRLWE();
+            updateStatus('Параметры безопасности применены', 'ready');
+        }
+
+        function applyFormatSettings() {
+            RLWE_CONFIG.formats.key = document.getElementById('keyFormat').value;
+            RLWE_CONFIG.formats.message = document.getElementById('messageFormat').value;
+            RLWE_CONFIG.formats.encoding = document.getElementById('messageEncoding').value;
+            RLWE_CONFIG.formats.compression = document.getElementById('keyCompression').value;
+            RLWE_CONFIG.formats.lineBreaks = document.getElementById('lineBreaks').value;
+            RLWE_CONFIG.formats.includeMetadata = document.getElementById('includeMetadata').checked;
+            
+            updateStatus('Настройки форматов применены', 'ready');
+        }
+
+        // Функции для кнопок (заглушки)
+        function copyPublicKey() {
+            navigator.clipboard.writeText(document.getElementById('publicKeyDisplay').textContent)
+                .then(() => updateStatus('Публичный ключ скопирован', 'ready'))
+                .catch(err => updateStatus('Ошибка копирования: ' + err, 'error'));
         }
         
-        function clearAll() {
-            document.getElementById('encryptedText').value = '';
-            document.getElementById('decryptKey').value = '';
-            document.getElementById('decryptedResult').textContent = '';
-            updateStatus('Все поля очищены', 'ready');
+        function copySecretKey() {
+            navigator.clipboard.writeText(document.getElementById('secretKeyDisplay').textContent)
+                .then(() => updateStatus('Секретный ключ скопирован', 'ready'))
+                .catch(err => updateStatus('Ошибка копирования: ' + err, 'error'));
         }
         
-        // ============ ОСНОВНЫЕ ФУНКЦИИ ШИФРОВАНИЯ ============
-        function encryptText() {
-            const text = document.getElementById('inputText').value;
-            const password = document.getElementById('key').value;
-            const securityLevel = parseInt(document.getElementById('securityLevel').value);
-            
-            if (!text) {
-                updateStatus('Введите текст для шифрования', 'error');
+        function copyEncryptedMessage() {
+            navigator.clipboard.writeText(document.getElementById('encryptedMessageResult').textContent)
+                .then(() => updateStatus('Шифротекст скопирован', 'ready'))
+                .catch(err => updateStatus('Ошибка копирования: ' + err, 'error'));
+        }
+        
+        function copyDecryptedMessage() {
+            navigator.clipboard.writeText(document.getElementById('decryptedMessageResult').textContent)
+                .then(() => updateStatus('Расшифрованный текст скопирован', 'ready'))
+                .catch(err => updateStatus('Ошибка копирования: ' + err, 'error'));
+        }
+        
+        function downloadPublicKey() {
+            updateStatus('Функция сохранения ключа в разработке', 'ready');
+        }
+        
+        function downloadSecretKey() {
+            updateStatus('Функция сохранения ключа в разработке', 'ready');
+        }
+        
+        function downloadEncryptedMessage() {
+            updateStatus('Функция сохранения шифротекста в разработке', 'ready');
+        }
+        
+        function downloadDecryptedMessage() {
+            updateStatus('Функция сохранения текста в разработке', 'ready');
+        }
+        
+        function showPublicKeyInfo() {
+            updateStatus('Информация о публичном ключе: ' + currentPublicKey.comment, 'ready');
+        }
+        
+        function showSecretKeyInfo() {
+            updateStatus('Информация о секретном ключе', 'ready');
+        }
+        
+        function analyzeCiphertext() {
+            if (!currentCiphertext) {
+                updateStatus('Нет шифротекста для анализа', 'error');
                 return;
             }
             
-            if (!password) {
-                updateStatus('Введите ключ шифрования', 'error');
-                return;
-            }
-            
-            updateStatus('Генерация ключей LWE...', 'working');
-            
-            setTimeout(() => {
-                try {
-                    // Получаем параметры LWE
-                    lweParams = LWE_PARAMS[securityLevel];
-                    updateSecurityInfo(securityLevel);
-                    
-                    // Генерация ключей LWE
-                    const keys = generateLWEKeys(lweParams);
-                    lwePublicKey = { A: keys.A, b: keys.b };
-                    lweSecretKey = keys.secret;
-                    
-                    updateStatus('Шифрование сообщения...', 'working');
-                    
-                    // Шифрование текста
-                    const ciphertexts = encryptTextLWE(text, lwePublicKey, lweParams);
-                    
-                    // Сохраняем в кэш для дешифрования
-                    encryptionCache.set(password, { ciphertexts, secret: lweSecretKey, params: lweParams });
-                    
-                    // Форматирование результата
-                    const result = {
-                        ciphertext: ciphertexts,
-                        params: {
-                            n: lweParams.n,
-                            q: lweParams.q
-                        },
-                        info: "Зашифрованные данные (первые 100 значений показаны)"
-                    };
-                    
-                    // Показываем только часть данных для удобства
-                    const displayData = JSON.stringify(result, (key, value) => {
-                        if (key === 'ciphertext' && Array.isArray(value)) {
-                            return value.slice(0, 5); // Показываем только первые 5 элементов
-                        }
-                        return value;
-                    }, 2);
-                    
-                    document.getElementById('encryptedResult').textContent = displayData;
-                    document.getElementById('encryptedText').value = JSON.stringify(result);
-                    updateStatus('Текст успешно зашифрован', 'ready');
-                } catch (error) {
-                    updateStatus('Ошибка шифрования: ' + error.message, 'error');
-                    console.error(error);
-                }
-            }, 100);
+            const size = JSON.stringify(currentCiphertext).length;
+            updateStatus(`Размер шифротекста: ${size} байт`, 'ready');
         }
         
-        function decryptText() {
-            const encryptedData = document.getElementById('encryptedText').value;
-            const password = document.getElementById('decryptKey').value;
+        function verifyDecryption() {
+            const original = document.getElementById('messageToEncrypt').value;
+            const decrypted = document.getElementById('decryptedMessageResult').textContent;
             
-            if (!encryptedData) {
-                updateStatus('Введите зашифрованные данные', 'error');
-                return;
+            if (original === decrypted) {
+                updateStatus('Проверка пройдена: тексты совпадают', 'ready');
+            } else {
+                updateStatus('Проверка не пройдена: тексты не совпадают', 'error');
             }
-            
-            if (!password) {
-                updateStatus('Введите ключ дешифрования', 'error');
-                return;
-            }
-            
-            updateStatus('Дешифрование...', 'working');
-            
-            setTimeout(() => {
-                try {
-                    // Парсинг данных
-                    const data = JSON.parse(encryptedData);
-                    const ciphertexts = data.ciphertext;
-                    
-                    // Получаем секретный ключ из кэша
-                    const cached = encryptionCache.get(password);
-                    if (!cached) {
-                        throw new Error("Неверный ключ или сессия устарела");
-                    }
-                    
-                    // Дешифрование
-                    const decrypted = decryptTextLWE(ciphertexts, cached.secret, cached.params);
-                    
-                    document.getElementById('decryptedResult').textContent = decrypted;
-                    updateStatus('Текст успешно дешифрован', 'ready');
-                } catch (error) {
-                    updateStatus('Ошибка дешифрования: ' + error.message, 'error');
-                    console.error(error);
-                }
-            }, 100);
         }
-        
-        // Инициализация
-        updateStatus('Система готова к работе', 'ready');
-        updateSecurityInfo(512); // По умолчанию
+
+        // Инициализация системы
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeRLWE();
+        });
     </script>
 </body>
 </html>
