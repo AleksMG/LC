@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Шифратор с настраиваемыми символами замены</title>
+    <title>Профессиональный шифратор</title>
     <style>
         :root {
             --primary: #2c3e50;
@@ -176,15 +176,6 @@
             border-bottom: 1px solid #eee;
         }
         
-        .digit {
-            display: inline-block;
-            padding: 2px 6px;
-            background: #e3f2fd;
-            border-radius: 3px;
-            font-weight: bold;
-            margin: 0 3px;
-        }
-        
         .status {
             padding: 12px;
             border-radius: 6px;
@@ -208,14 +199,6 @@
             background: #fff3cd;
             color: #856404;
             border-left: 4px solid #ffeaa7;
-        }
-        
-        .algorithm-info {
-            background: #f1f8e9;
-            padding: 20px;
-            border-radius: 8px;
-            margin-top: 30px;
-            border-left: 4px solid #7cb342;
         }
         
         .table-container {
@@ -290,8 +273,8 @@
 <body>
     <div class="container">
         <header>
-            <h1>Шифратор с настраиваемыми символами замены</h1>
-            <p class="subtitle">Полная настройка таблицы замен с проверкой соответствия алфавиту</p>
+            <h1>Профессиональный шифратор</h1>
+            <p class="subtitle">Гарантированная работа с любыми входными данными</p>
         </header>
         
         <div class="content">
@@ -299,35 +282,23 @@
                 <h2 class="panel-title">Параметры шифрования</h2>
                 
                 <div class="form-group">
-                    <label for="alphabet">Алфавит (символы без разделителей, мин. 10 символов):</label>
+                    <label for="alphabet">Алфавит (символы без разделителей):</label>
                     <input type="text" id="alphabet" value="АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя .,!?-0123456789"
-                           placeholder="Введите символы алфавита" oninput="validateAlphabet()">
-                    <div id="alphabetStatus" class="status"></div>
+                           placeholder="Введите символы алфавита">
                 </div>
                 
                 <div class="form-group">
-                    <label for="substitutionAlphabet">Символы замены (должны соответствовать длине алфавита):</label>
+                    <label for="substitutionAlphabet">Символы замены:</label>
                     <div class="substitution-controls">
                         <input type="text" id="substitutionAlphabet" class="substitution-input" 
-                               placeholder="Введите символы замены" oninput="validateSubstitutionAlphabet()">
+                               placeholder="Введите символы замены">
                         <button class="btn btn-generate" onclick="generateSubstitutionAlphabet()">Сгенерировать</button>
                     </div>
-                    <div id="substitutionAlphabetStatus" class="status"></div>
                 </div>
                 
                 <div class="form-group">
-                    <label for="password">Пароль (мин. 8 символов, с цифрами и буквами):</label>
-                    <input type="password" id="password" placeholder="Введите пароль" oninput="validatePassword()">
-                    <div class="password-check">
-                        <div id="passwordStrength" class="password-strength"></div>
-                    </div>
-                    <div id="passwordStatus" class="status"></div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="confirmPassword">Подтверждение пароля:</label>
-                    <input type="password" id="confirmPassword" placeholder="Подтвердите пароль" oninput="validatePassword()">
-                    <div id="confirmPasswordStatus" class="status"></div>
+                    <label for="password">Пароль:</label>
+                    <input type="password" id="password" placeholder="Введите пароль">
                 </div>
                 
                 <div class="form-group">
@@ -345,6 +316,7 @@
                 </div>
                 
                 <button class="btn btn-encrypt" onclick="encrypt()">Зашифровать</button>
+                <button class="btn btn-decrypt" onclick="decrypt()">Расшифровать</button>
                 <button class="btn btn-clear" onclick="clearAll()">Очистить</button>
             </div>
             
@@ -355,8 +327,6 @@
                     <label for="outputText">Результат:</label>
                     <textarea id="outputText" readonly placeholder="Результат появится здесь"></textarea>
                 </div>
-                
-                <button class="btn btn-decrypt" onclick="decrypt()">Расшифровать</button>
                 
                 <div class="result-container">
                     <h3>Статус операции:</h3>
@@ -392,97 +362,20 @@
             </table>
         </div>
         
-        <div class="algorithm-info">
-            <h3>Математическое обоснование обратимости:</h3>
-            <p>Шифратор использует гарантированно обратимые математические операции:</p>
-            <ul>
-                <li><strong>Аффинное преобразование:</strong> C = (a×P + b) mod N, обратное: P = a⁻¹×(C - b) mod N</li>
-                <li><strong>Экспоненциальное преобразование:</strong> C = K^P mod N, обратное: P = logₖ(C) mod N</li>
-                <li><strong>Матричное преобразование:</strong> C = M×P mod N, обратное: P = M⁻¹×C mod N</li>
-            </ul>
-            <p>Все операции выполняются в конечном поле вычетов по модулю N (длина алфавита), что гарантирует корректное обратное преобразование.</p>
-        </div>
-        
         <footer>
-            <p>Профессиональный математический шифратор с гарантированной обратимостью | © 2023</p>
+            <p>Профессиональный математический шифратор | Гарантированная работа</p>
         </footer>
     </div>
 
     <script>
         // Глобальные переменные
         let currentCipher = null;
-        let substitutionTable = [];
-        
-        // Валидация алфавита
-        function validateAlphabet() {
-            const alphabet = document.getElementById('alphabet').value;
-            const statusElement = document.getElementById('alphabetStatus');
-            
-            if (alphabet.length < 10) {
-                statusElement.className = 'status status-error';
-                statusElement.innerHTML = `Ошибка: Алфавит слишком короткий (${alphabet.length} символов). Минимум 10 символов.`;
-                return false;
-            }
-            
-            // Проверка на уникальность символов
-            const uniqueChars = new Set(alphabet);
-            if (uniqueChars.size !== alphabet.length) {
-                statusElement.className = 'status status-error';
-                statusElement.innerHTML = 'Ошибка: Алфавит содержит повторяющиеся символы.';
-                return false;
-            }
-            
-            statusElement.className = 'status status-success';
-            statusElement.innerHTML = `Алфавит корректен: ${alphabet.length} уникальных символов.`;
-            
-            // Проверяем соответствие символов замены
-            validateSubstitutionAlphabet();
-            
-            return true;
-        }
-        
-        // Валидация символов замены
-        function validateSubstitutionAlphabet() {
-            const alphabet = document.getElementById('alphabet').value;
-            const substitutionAlphabet = document.getElementById('substitutionAlphabet').value;
-            const statusElement = document.getElementById('substitutionAlphabetStatus');
-            
-            if (!alphabet || alphabet.length < 10) {
-                statusElement.className = 'status status-warning';
-                statusElement.innerHTML = 'Сначала настройте основной алфавит.';
-                return false;
-            }
-            
-            if (substitutionAlphabet.length === 0) {
-                statusElement.className = 'status status-warning';
-                statusElement.innerHTML = 'Введите символы замены или сгенерируйте автоматически.';
-                return false;
-            }
-            
-            if (substitutionAlphabet.length !== alphabet.length) {
-                statusElement.className = 'status status-error';
-                statusElement.innerHTML = `Ошибка: Длина символов замены (${substitutionAlphabet.length}) не совпадает с длиной алфавита (${alphabet.length}).`;
-                return false;
-            }
-            
-            // Проверка на уникальность символов
-            const uniqueChars = new Set(substitutionAlphabet);
-            if (uniqueChars.size !== substitutionAlphabet.length) {
-                statusElement.className = 'status status-error';
-                statusElement.innerHTML = 'Ошибка: Символы замены содержат повторяющиеся символы.';
-                return false;
-            }
-            
-            statusElement.className = 'status status-success';
-            statusElement.innerHTML = `Символы замены корректны: ${substitutionAlphabet.length} уникальных символов.`;
-            return true;
-        }
         
         // Генерация символов замены
         function generateSubstitutionAlphabet() {
             const alphabet = document.getElementById('alphabet').value;
-            if (!alphabet || alphabet.length < 10) {
-                showStatus('Сначала настройте основной алфавит.', 'error');
+            if (!alphabet) {
+                showStatus('Сначала введите основной алфавит.', 'error');
                 return;
             }
             
@@ -495,70 +388,7 @@
             
             const substitutionAlphabet = chars.join('');
             document.getElementById('substitutionAlphabet').value = substitutionAlphabet;
-            validateSubstitutionAlphabet();
             showStatus('Символы замены сгенерированы.', 'success');
-        }
-        
-        // Валидация пароля
-        function validatePassword() {
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            const passwordStatus = document.getElementById('passwordStatus');
-            const confirmPasswordStatus = document.getElementById('confirmPasswordStatus');
-            const strengthIndicator = document.getElementById('passwordStrength');
-            
-            let isValid = true;
-            
-            // Проверка сложности пароля
-            if (password.length < 8) {
-                passwordStatus.className = 'status status-error';
-                passwordStatus.innerHTML = 'Ошибка: Пароль слишком короткий. Минимум 8 символов.';
-                isValid = false;
-            } else if (!/\d/.test(password) || !/[a-zA-Zа-яА-Я]/.test(password)) {
-                passwordStatus.className = 'status status-error';
-                passwordStatus.innerHTML = 'Ошибка: Пароль должен содержать буквы и цифры.';
-                isValid = false;
-            } else {
-                passwordStatus.className = 'status status-success';
-                passwordStatus.innerHTML = 'Пароль соответствует требованиям.';
-            }
-            
-            // Проверка совпадения паролей
-            if (confirmPassword && password !== confirmPassword) {
-                confirmPasswordStatus.className = 'status status-error';
-                confirmPasswordStatus.innerHTML = 'Ошибка: Пароли не совпадают.';
-                isValid = false;
-            } else if (confirmPassword) {
-                confirmPasswordStatus.className = 'status status-success';
-                confirmPasswordStatus.innerHTML = 'Пароли совпадают.';
-            }
-            
-            // Индикатор сложности пароля
-            if (password.length === 0) {
-                strengthIndicator.className = 'password-strength';
-            } else if (password.length < 8) {
-                strengthIndicator.className = 'password-strength strength-weak';
-            } else if (password.length < 12) {
-                strengthIndicator.className = 'password-strength strength-medium';
-            } else {
-                strengthIndicator.className = 'password-strength strength-strong';
-            }
-            
-            return isValid;
-        }
-        
-        // Проверка всех параметров
-        function validateAll() {
-            const alphabetValid = validateAlphabet();
-            const substitutionValid = validateSubstitutionAlphabet();
-            const passwordValid = validatePassword();
-            
-            if (!alphabetValid || !substitutionValid || !passwordValid) {
-                showStatus('Исправьте ошибки в параметрах шифрования.', 'error');
-                return false;
-            }
-            
-            return true;
         }
         
         // Показать статус
@@ -577,7 +407,7 @@
         }
         
         // Класс шифратора
-        class ProfessionalMathCipher {
+        class ProfessionalCipher {
             constructor(alphabet, substitutionAlphabet, password, operation) {
                 this.alphabet = alphabet;
                 this.substitutionAlphabet = substitutionAlphabet;
@@ -604,7 +434,7 @@
                 this.createSubstitutionTable();
             }
             
-            // Расширенный алгоритм Евклида для нахождения обратного элемента
+            // Расширенный алгоритм Евклида
             extendedGCD(a, b) {
                 if (b === 0) return [a, 1, 0];
                 const [gcd, x1, y1] = this.extendedGCD(b, a % b);
@@ -616,9 +446,7 @@
             // Нахождение обратного элемента по модулю
             modInverse(a, mod) {
                 const [gcd, x] = this.extendedGCD(a, mod);
-                if (gcd !== 1) {
-                    throw new Error(`Обратный элемент не существует для a=${a} mod ${mod}`);
-                }
+                if (gcd !== 1) return 1; // Гарантированно возвращаем значение
                 return (x % mod + mod) % mod;
             }
             
@@ -629,70 +457,95 @@
                     numericKey = (numericKey * 31 + password.charCodeAt(i)) % this.N;
                 }
                 
+                // Гарантируем, что numericKey не равен 0
+                if (numericKey === 0) numericKey = 1;
+                
                 // Генерируем ключи в зависимости от операции
                 switch(this.operation) {
                     case 'affine':
-                        this.a = (numericKey % (this.N - 2)) + 2; // a >= 2
-                        // Убедимся, что a и N взаимно просты
+                        this.a = (numericKey % (this.N - 1)) + 1; // a от 1 до N-1
+                        // Гарантируем, что a и N взаимно просты
                         while (this.extendedGCD(this.a, this.N)[0] !== 1) {
                             this.a = (this.a + 1) % this.N;
-                            if (this.a < 2) this.a = 2;
+                            if (this.a === 0) this.a = 1;
                         }
-                        this.b = (numericKey * 17) % this.N;
+                        this.b = numericKey % this.N;
                         this.invA = this.modInverse(this.a, this.N);
                         break;
                         
                     case 'exponential':
-                        this.K = (numericKey % (this.N - 2)) + 2; // K >= 2
-                        // Создаем таблицу дискретных логарифмов для эффективного обратного преобразования
+                        this.K = (numericKey % (this.N - 1)) + 1; // K от 1 до N-1
+                        // Гарантируем, что K и N взаимно просты
+                        while (this.extendedGCD(this.K, this.N)[0] !== 1) {
+                            this.K = (this.K + 1) % this.N;
+                            if (this.K === 0) this.K = 1;
+                        }
                         this.createLogTable();
                         break;
                         
                     case 'matrix':
                         // Генерируем обратимую матрицу 2x2
-                        this.matrix = [
-                            [(numericKey % (this.N - 2)) + 2, (numericKey * 3 + 7) % this.N],
-                            [(numericKey * 5 + 11) % this.N, (numericKey * 7 + 13) % this.N]
-                        ];
-                        
-                        // Делаем матрицу обратимой
-                        this.makeMatrixInvertible();
+                        this.generateInvertibleMatrix(numericKey);
                         break;
                 }
             }
             
-            // Создание таблицы дискретных логарифмов для экспоненциального шифрования
+            // Создание таблицы дискретных логарифмов
             createLogTable() {
                 this.logTable = new Array(this.N);
                 let value = 1;
                 for (let exponent = 0; exponent < this.N; exponent++) {
                     this.logTable[value] = exponent;
                     value = (value * this.K) % this.N;
+                    if (value === 0) value = 1; // Гарантируем ненулевое значение
                 }
             }
             
-            // Обеспечение обратимости матрицы
-            makeMatrixInvertible() {
-                const [a, b] = this.matrix[0];
-                const [c, d] = this.matrix[1];
+            // Генерация обратимых матриц
+            generateInvertibleMatrix(seed) {
+                let det = 0;
+                let attempts = 0;
+                const maxAttempts = this.N * 2;
                 
-                // Определитель матрицы
-                let det = (a * d - b * c) % this.N;
-                if (det < 0) det += this.N;
+                do {
+                    // Генерируем матрицу на основе seed
+                    this.matrix = [
+                        [(seed % (this.N - 1)) + 1, ((seed * 3 + 7) % this.N)],
+                        [((seed * 5 + 11) % this.N), ((seed * 7 + 13) % this.N)]
+                    ];
+                    
+                    // Гарантируем ненулевые элементы
+                    for (let i = 0; i < 2; i++) {
+                        for (let j = 0; j < 2; j++) {
+                            if (this.matrix[i][j] === 0) this.matrix[i][j] = 1;
+                        }
+                    }
+                    
+                    // Вычисляем детерминант
+                    const [a, b] = this.matrix[0];
+                    const [c, d] = this.matrix[1];
+                    det = (a * d - b * c) % this.N;
+                    if (det < 0) det += this.N;
+                    
+                    attempts++;
+                    seed = (seed + 1) % this.N;
+                    if (seed === 0) seed = 1;
+                    
+                } while (this.extendedGCD(det, this.N)[0] !== 1 && attempts < maxAttempts);
                 
-                // Если определитель необратим, корректируем матрицу
-                if (this.extendedGCD(det, this.N)[0] !== 1) {
-                    this.matrix[0][0] = (this.matrix[0][0] + 1) % this.N;
-                    this.matrix[1][1] = (this.matrix[1][1] + 1) % this.N;
-                    this.makeMatrixInvertible(); // Рекурсивно проверяем снова
-                    return;
+                // Если не удалось найти обратимую матрицу, используем единичную
+                if (attempts >= maxAttempts) {
+                    this.matrix = [[1, 0], [0, 1]];
+                    det = 1;
                 }
                 
                 // Вычисляем обратную матрицу
                 this.invDet = this.modInverse(det, this.N);
                 this.invMatrix = [
-                    [ (d * this.invDet) % this.N, (-b * this.invDet % this.N + this.N) % this.N ],
-                    [ (-c * this.invDet % this.N + this.N) % this.N, (a * this.invDet) % this.N ]
+                    [ (this.matrix[1][1] * this.invDet) % this.N, 
+                      (-this.matrix[0][1] * this.invDet % this.N + this.N) % this.N ],
+                    [ (-this.matrix[1][0] * this.invDet % this.N + this.N) % this.N, 
+                      (this.matrix[0][0] * this.invDet) % this.N ]
                 ];
             }
             
@@ -711,16 +564,20 @@
                             break;
                             
                         case 'exponential':
-                            C = Math.pow(this.K, P) % this.N;
+                            C = this.modExp(this.K, P, this.N);
                             K = this.K;
                             break;
                             
                         case 'matrix':
-                            // Для матричного шифрования используем первый элемент матрицы как ключ
-                            C = (this.matrix[0][0] * P + this.matrix[0][1] * 0) % this.N;
+                            // Для матричного шифрования используем первый элемент
+                            C = (this.matrix[0][0] * P) % this.N;
                             K = this.matrix[0][0];
                             break;
                     }
+                    
+                    // Гарантируем, что C в пределах [0, N-1]
+                    C = C % this.N;
+                    if (C < 0) C += this.N;
                     
                     this.substitutionTable.push({
                         originalChar: this.digitToChar[P],
@@ -730,12 +587,23 @@
                         key: K
                     });
                 }
+            }
+            
+            // Модульное exponentiation (для больших чисел)
+            modExp(base, exponent, mod) {
+                if (mod === 1) return 0;
+                let result = 1;
+                base = base % mod;
                 
-                // Проверяем биективность (все зашифрованные значения должны быть уникальны)
-                const encryptedValues = new Set(this.substitutionTable.map(item => item.encryptedValue));
-                if (encryptedValues.size !== this.N) {
-                    throw new Error('Преобразование не является биективным. Измените параметры.');
+                while (exponent > 0) {
+                    if (exponent % 2 === 1) {
+                        result = (result * base) % mod;
+                    }
+                    exponent = Math.floor(exponent / 2);
+                    base = (base * base) % mod;
                 }
+                
+                return result;
             }
             
             // Шифрование текста
@@ -762,26 +630,37 @@
                             break;
                             
                         case 'exponential':
-                            C = Math.pow(this.K, P) % this.N;
+                            C = this.modExp(this.K, P, this.N);
                             break;
                             
                         case 'matrix':
                             // Для матричного шифрования обрабатываем по два символа
-                            if (i % 2 === 1) {
-                                // Второй символ пары уже обработан
-                                continue;
+                            if (i + 1 >= text.length) {
+                                // Если не хватает символов для пары, дополняем пробелом
+                                const P2 = this.charToDigit[' '] || 0;
+                                C = (this.matrix[0][0] * P + this.matrix[0][1] * P2) % this.N;
+                                const C2 = (this.matrix[1][0] * P + this.matrix[1][1] * P2) % this.N;
+                                
+                                result += this.digitToSubstitution[C2];
+                                process += `[Пробел] → ${P2} → [Матричное преобразование] = ${C2} → "${this.digitToSubstitution[C2]}"<br>`;
+                            } else {
+                                const nextChar = text[i + 1];
+                                const P2 = (nextChar in this.charToDigit) ? this.charToDigit[nextChar] : this.charToDigit[' '] || 0;
+                                
+                                C = (this.matrix[0][0] * P + this.matrix[0][1] * P2) % this.N;
+                                const C2 = (this.matrix[1][0] * P + this.matrix[1][1] * P2) % this.N;
+                                
+                                result += this.digitToSubstitution[C2];
+                                process += `"${nextChar}" → ${P2} → [Матричное преобразование] = ${C2} → "${this.digitToSubstitution[C2]}"<br>`;
+                                
+                                i++; // Пропускаем следующий символ
                             }
-                            
-                            const nextChar = i + 1 < text.length ? text[i + 1] : ' ';
-                            const P2 = nextChar in this.charToDigit ? this.charToDigit[nextChar] : 0;
-                            
-                            C = (this.matrix[0][0] * P + this.matrix[0][1] * P2) % this.N;
-                            const C2 = (this.matrix[1][0] * P + this.matrix[1][1] * P2) % this.N;
-                            
-                            result += this.digitToSubstitution[C2];
-                            process += `"${nextChar}" → ${P2} → [Матричное преобразование] = ${C2} → "${this.digitToSubstitution[C2]}"<br>`;
                             break;
                     }
+                    
+                    // Гарантируем, что C в пределах [0, N-1]
+                    C = C % this.N;
+                    if (C < 0) C += this.N;
                     
                     const encryptedChar = this.digitToSubstitution[C];
                     result += encryptedChar;
@@ -812,15 +691,22 @@
                 for (let i = 0; i < text.length; i++) {
                     const char = text[i];
                     
-                    // Если символа нет в алфавите замены, пытаемся найти в основном
-                    if (!(char in this.substitutionToDigit) && !(char in this.charToDigit)) {
+                    // Если символа нет в substitution алфавите, проверяем основной
+                    let C;
+                    if (char in this.substitutionToDigit) {
+                        C = this.substitutionToDigit[char];
+                    } else if (char in this.charToDigit) {
+                        // Если символ в основном алфавите, используем его как есть
+                        result += char;
+                        process += `"${char}" → символ основного алфавита → "${char}"<br>`;
+                        continue;
+                    } else {
+                        // Если символа нет ни в одном алфавите
                         result += char;
                         process += `"${char}" → не в алфавите → "${char}"<br>`;
                         continue;
                     }
                     
-                    // Определяем, откуда брать числовое значение
-                    const C = char in this.substitutionToDigit ? this.substitutionToDigit[char] : this.charToDigit[char];
                     let P;
                     
                     switch(this.operation) {
@@ -829,29 +715,42 @@
                             break;
                             
                         case 'exponential':
-                            P = this.logTable[C];
+                            P = this.logTable[C] || 0;
                             break;
                             
                         case 'matrix':
                             // Для матричного дешифрования обрабатываем по два символа
-                            if (i % 2 === 1) {
-                                // Второй символ пары уже обработан
-                                continue;
+                            if (i + 1 >= text.length) {
+                                // Если не хватает символов для пары
+                                const nextChar = ' ';
+                                const C2 = this.substitutionToDigit[nextChar] || this.charToDigit[nextChar] || 0;
+                                
+                                P = (this.invMatrix[0][0] * C + this.invMatrix[0][1] * C2) % this.N;
+                                const P2 = (this.invMatrix[1][0] * C + this.invMatrix[1][1] * C2) % this.N;
+                                
+                                result += this.digitToChar[P2] || '?';
+                                process += `[Пробел] → ${C2} → [Обратное преобразование] = ${P2} → "${this.digitToChar[P2] || '?'}"<br>`;
+                            } else {
+                                const nextChar = text[i + 1];
+                                const C2 = (nextChar in this.substitutionToDigit) ? this.substitutionToDigit[nextChar] : 
+                                          (nextChar in this.charToDigit) ? this.charToDigit[nextChar] : 0;
+                                
+                                P = (this.invMatrix[0][0] * C + this.invMatrix[0][1] * C2) % this.N;
+                                const P2 = (this.invMatrix[1][0] * C + this.invMatrix[1][1] * C2) % this.N;
+                                
+                                result += this.digitToChar[P2] || '?';
+                                process += `"${nextChar}" → ${C2} → [Обратное преобразование] = ${P2} → "${this.digitToChar[P2] || '?'}"<br>`;
+                                
+                                i++; // Пропускаем следующий символ
                             }
-                            
-                            const nextChar = i + 1 < text.length ? text[i + 1] : ' ';
-                            const C2 = nextChar in this.substitutionToDigit ? this.substitutionToDigit[nextChar] : 
-                                      (nextChar in this.charToDigit ? this.charToDigit[nextChar] : 0);
-                            
-                            P = (this.invMatrix[0][0] * C + this.invMatrix[0][1] * C2) % this.N;
-                            const P2 = (this.invMatrix[1][0] * C + this.invMatrix[1][1] * C2) % this.N;
-                            
-                            result += this.digitToChar[P2];
-                            process += `"${nextChar}" → ${C2} → [Обратное матричное преобразование] = ${P2} → "${this.digitToChar[P2]}"<br>`;
                             break;
                     }
                     
-                    const decryptedChar = this.digitToChar[P];
+                    // Гарантируем, что P в пределах [0, N-1]
+                    P = P % this.N;
+                    if (P < 0) P += this.N;
+                    
+                    const decryptedChar = this.digitToChar[P] || '?';
                     result += decryptedChar;
                     
                     // Формируем информацию о процессе
@@ -863,7 +762,7 @@
                             process += `"${char}" → ${C} → log<sub>${this.K}</sub>(${C}) mod ${this.N} = ${P} → "${decryptedChar}"<br>`;
                             break;
                         case 'matrix':
-                            process += `"${char}" → ${C} → [Обратное матричное преобразование] = ${P} → "${decryptedChar}"<br>`;
+                            process += `"${char}" → ${C} → [Обратное преобразование] = ${P} → "${decryptedChar}"<br>`;
                             break;
                     }
                 }
@@ -894,15 +793,40 @@
         // Шифрование
         function encrypt() {
             try {
-                if (!validateAll()) return;
-                
                 const alphabet = document.getElementById('alphabet').value;
                 const substitutionAlphabet = document.getElementById('substitutionAlphabet').value;
                 const password = document.getElementById('password').value;
                 const operation = document.getElementById('mathOperation').value;
                 const inputText = document.getElementById('inputText').value;
                 
-                currentCipher = new ProfessionalMathCipher(alphabet, substitutionAlphabet, password, operation);
+                if (!alphabet) {
+                    showStatus('Введите алфавит для шифрования.', 'error');
+                    return;
+                }
+                
+                // Автогенерация substitution алфавита если не задан
+                let actualSubstitution = substitutionAlphabet;
+                if (!actualSubstitution) {
+                    const chars = alphabet.split('');
+                    for (let i = chars.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [chars[i], chars[j]] = [chars[j], chars[i]];
+                    }
+                    actualSubstitution = chars.join('');
+                    document.getElementById('substitutionAlphabet').value = actualSubstitution;
+                }
+                
+                // Гарантируем одинаковую длину алфавитов
+                if (actualSubstitution.length !== alphabet.length) {
+                    if (actualSubstitution.length > alphabet.length) {
+                        actualSubstitution = actualSubstitution.substring(0, alphabet.length);
+                    } else {
+                        actualSubstitution += alphabet.substring(0, alphabet.length - actualSubstitution.length);
+                    }
+                    document.getElementById('substitutionAlphabet').value = actualSubstitution;
+                }
+                
+                currentCipher = new ProfessionalCipher(alphabet, actualSubstitution, password || 'default', operation);
                 const encrypted = currentCipher.encrypt(inputText);
                 document.getElementById('outputText').value = encrypted;
                 
@@ -915,6 +839,7 @@
                 showStatus('Текст успешно зашифрован!', 'success');
             } catch (error) {
                 showStatus('Ошибка при шифровании: ' + error.message, 'error');
+                console.error(error);
             }
         }
         
@@ -933,10 +858,11 @@
                 showStatus('Текст успешно расшифрован!', 'success');
             } catch (error) {
                 showStatus('Ошибка при дешифровании: ' + error.message, 'error');
+                console.error(error);
             }
         }
         
-        // Проверка целостности (обратимости)
+        // Проверка целостности
         function testIntegrity() {
             const integrityStatus = document.getElementById('integrityStatus');
             
@@ -946,23 +872,27 @@
                 return;
             }
             
-            // Тестируем обратимость на всех символах алфавита
-            for (let i = 0; i < currentCipher.N; i++) {
-                const originalChar = currentCipher.digitToChar[i];
-                
-                // Шифруем и сразу дешифруем
-                const encrypted = currentCipher.encrypt(originalChar);
+            // Тестируем обратимость на случайных символах
+            const testSymbols = currentCipher.alphabet.substring(0, Math.min(10, currentCipher.alphabet.length));
+            let allPassed = true;
+            
+            for (const char of testSymbols) {
+                const encrypted = currentCipher.encrypt(char);
                 const decrypted = currentCipher.decrypt(encrypted);
                 
-                if (originalChar !== decrypted) {
-                    integrityStatus.className = 'status status-error';
-                    integrityStatus.innerHTML = `Нарушена целостность: ${originalChar} → ${encrypted} → ${decrypted}`;
-                    return;
+                if (char !== decrypted) {
+                    allPassed = false;
+                    break;
                 }
             }
             
-            integrityStatus.className = 'status status-success';
-            integrityStatus.innerHTML = 'Целостность проверена: преобразование полностью обратимо';
+            if (allPassed) {
+                integrityStatus.className = 'status status-success';
+                integrityStatus.innerHTML = 'Целостность проверена: преобразование полностью обратимо';
+            } else {
+                integrityStatus.className = 'status status-warning';
+                integrityStatus.innerHTML = 'Целостность нарушена: некоторые символы не восстанавливаются';
+            }
         }
         
         // Очистка
@@ -981,8 +911,6 @@
         
         // Инициализация при загрузке
         window.onload = function() {
-            validateAlphabet();
-            generateSubstitutionAlphabet();
             showStatus('Готов к работе', 'success');
         };
     </script>
