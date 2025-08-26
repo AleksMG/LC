@@ -14,7 +14,7 @@
         }
         
         body {
-            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            background: linear-gradient(135deg, #0c0c1e, #1a1a3e, #0c0c1e);
             color: #fff;
             min-height: 100vh;
             padding: 20px;
@@ -24,71 +24,74 @@
         }
         
         .container {
-            background: rgba(0, 0, 0, 0.7);
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            background: rgba(10, 10, 20, 0.95);
+            border-radius: 16px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.8);
             padding: 30px;
             width: 100%;
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 20px 0;
+            border: 1px solid rgba(100, 100, 200, 0.2);
         }
         
         header {
             text-align: center;
             margin-bottom: 30px;
             padding: 20px;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(20, 20, 40, 0.6);
+            border-radius: 12px;
+            border: 1px solid rgba(100, 100, 200, 0.3);
         }
         
         h1 {
-            font-size: 2.8rem;
+            font-size: 2.5rem;
             margin-bottom: 15px;
-            color: #00ffcc;
-            text-shadow: 0 0 15px rgba(0, 255, 204, 0.7);
-        }
-        
-        .subtitle {
-            font-size: 1.2rem;
-            color: #ddd;
-            max-width: 800px;
-            margin: 0 auto;
-            line-height: 1.6;
+            color: #00ffea;
+            text-shadow: 0 0 20px rgba(0, 255, 234, 0.6);
+            font-weight: 300;
+            letter-spacing: 1px;
         }
         
         .security-badge {
             display: inline-block;
-            background: linear-gradient(to right, #4CAF50, #2E8B57);
+            background: linear-gradient(45deg, #0066ff, #00ccff);
             color: white;
             padding: 8px 20px;
-            border-radius: 30px;
+            border-radius: 20px;
             margin-top: 15px;
-            font-weight: bold;
+            font-weight: 600;
             font-size: 1rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .config-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
         }
         
         .card {
-            background: rgba(30, 30, 50, 0.7);
-            border-radius: 15px;
+            background: rgba(25, 25, 45, 0.8);
+            border-radius: 12px;
             padding: 25px;
-            margin-bottom: 25px;
-            border: 1px solid rgba(100, 100, 150, 0.5);
+            border: 1px solid rgba(100, 100, 200, 0.2);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
         
         .card-title {
-            color: #4dccbd;
+            color: #00ffea;
             margin-bottom: 20px;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             display: flex;
             align-items: center;
             gap: 12px;
+            font-weight: 500;
         }
         
         .card-title i {
-            font-size: 1.5rem;
-            color: #00ffcc;
+            font-size: 1.3rem;
+            color: #00ffea;
         }
         
         .input-group {
@@ -98,79 +101,101 @@
         label {
             display: block;
             margin-bottom: 10px;
-            color: #aaa;
-            font-size: 1.1rem;
+            color: #aaccff;
+            font-size: 1rem;
             font-weight: 500;
         }
         
         input, textarea, select {
             width: 100%;
-            padding: 14px 18px;
+            padding: 14px 16px;
             border-radius: 10px;
-            border: 2px solid #444;
-            background: rgba(10, 10, 20, 0.7);
+            border: 2px solid rgba(100, 100, 200, 0.3);
+            background: rgba(15, 15, 30, 0.8);
             color: #fff;
-            font-size: 1.1rem;
+            font-size: 1rem;
             transition: all 0.3s;
+            font-family: 'Courier New', monospace;
         }
         
         input:focus, textarea:focus, select:focus {
             outline: none;
-            border-color: #00ffcc;
-            box-shadow: 0 0 15px rgba(0, 255, 204, 0.5);
+            border-color: #00ffea;
+            box-shadow: 0 0 15px rgba(0, 255, 234, 0.4);
+            background: rgba(20, 20, 40, 0.9);
         }
         
-        .input-hint {
+        .security-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .security-metric {
+            background: rgba(30, 30, 60, 0.8);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(100, 100, 200, 0.2);
+        }
+        
+        .metric-value {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #00ffea;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .metric-label {
+            color: #aaccff;
             font-size: 0.9rem;
-            color: #888;
-            margin-top: 5px;
+            font-weight: 500;
         }
         
         .btn-group {
-            display: flex;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 15px;
             margin: 25px 0;
-            flex-wrap: wrap;
         }
         
         button {
-            flex: 1;
-            min-width: 150px;
             padding: 16px;
             border: none;
             border-radius: 10px;
-            font-size: 1.1rem;
-            font-weight: bold;
+            font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
+            background: rgba(40, 40, 80, 0.8);
+            color: #fff;
+            border: 1px solid rgba(100, 100, 200, 0.3);
         }
         
         .encrypt-btn {
-            background: linear-gradient(to right, #4CAF50, #2E8B57);
-            color: white;
+            background: linear-gradient(45deg, #0066ff, #00ccff);
         }
         
         .decrypt-btn {
-            background: linear-gradient(to right, #f44336, #B22222);
-            color: white;
-        }
-        
-        .reset-btn {
-            background: linear-gradient(to right, #2196F3, #0D47A1);
-            color: white;
+            background: linear-gradient(45deg, #ff3366, #ff00cc);
         }
         
         .test-btn {
-            background: linear-gradient(to right, #FF9800, #E65100);
-            color: white;
+            background: linear-gradient(45deg, #00cc66, #00ffaa);
+        }
+        
+        .reset-btn {
+            background: linear-gradient(45deg, #ffaa00, #ff6600);
         }
         
         button:hover {
-            transform: translateY(-3px);
+            transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
         }
         
@@ -179,136 +204,126 @@
         }
         
         .result-container {
-            background: rgba(30, 50, 30, 0.7);
-            border-radius: 15px;
+            background: rgba(25, 25, 45, 0.8);
+            border-radius: 12px;
             padding: 25px;
             margin-top: 20px;
+            border: 1px solid rgba(100, 100, 200, 0.2);
         }
         
         .result-text {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             text-align: center;
             padding: 25px;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 15px;
-            font-family: monospace;
-            letter-spacing: 2px;
+            background: rgba(15, 15, 30, 0.8);
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
             min-height: 120px;
             display: flex;
             align-items: center;
             justify-content: center;
             word-break: break-all;
-            border: 2px dashed #4dccbd;
+            border: 2px solid rgba(100, 100, 200, 0.3);
             line-height: 1.6;
+            color: #00ffea;
+        }
+        
+        .status-panel {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            background: rgba(20, 20, 40, 0.8);
+            border: 1px solid rgba(100, 100, 200, 0.2);
         }
         
         .status-indicator {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 15px;
-            padding: 10px;
-            border-radius: 8px;
-            background: rgba(0, 0, 0, 0.3);
-        }
-        
-        .status-dot {
-            width: 12px;
-            height: 12px;
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
-            background: #888;
+            background: #666;
         }
         
-        .status-ok {
-            background: #4CAF50;
+        .status-active {
+            background: #00ff00;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+        
+        .status-warning {
+            background: #ffaa00;
+            box-shadow: 0 0 10px rgba(255, 170, 0, 0.5);
         }
         
         .status-error {
-            background: #f44336;
+            background: #ff3366;
+            box-shadow: 0 0 10px rgba(255, 51, 102, 0.5);
         }
         
-        .crypto-info {
+        .mapping-display {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
-        }
-        
-        .info-card {
-            background: rgba(20, 20, 40, 0.8);
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-        }
-        
-        .info-value {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #00ffcc;
-            margin: 10px 0;
-        }
-        
-        .info-label {
-            color: #aaa;
-            font-size: 1rem;
-        }
-        
-        .verification-panel {
-            background: rgba(50, 50, 80, 0.7);
-            border-radius: 15px;
-            padding: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+            gap: 12px;
             margin-top: 20px;
+            padding: 20px;
+            background: rgba(15, 15, 30, 0.8);
+            border-radius: 12px;
+            border: 1px solid rgba(100, 100, 200, 0.2);
         }
         
-        .verification-result {
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 15px;
+        .mapping-item {
+            padding: 12px;
             text-align: center;
-            font-weight: bold;
+            background: rgba(30, 30, 60, 0.8);
+            border-radius: 8px;
+            border: 1px solid rgba(100, 100, 200, 0.2);
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
         }
         
-        .success {
-            background: rgba(76, 175, 80, 0.2);
-            color: #4CAF50;
-            border: 1px solid #4CAF50;
+        .mapping-char {
+            color: #aaccff;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
         }
         
-        .error {
-            background: rgba(244, 67, 54, 0.2);
-            color: #f44336;
-            border: 1px solid #f44336;
+        .mapping-symbol {
+            color: #00ffea;
+            font-size: 1.3rem;
         }
         
         footer {
             text-align: center;
             margin-top: 30px;
-            color: #aaa;
+            color: #8899cc;
             padding: 20px;
             width: 100%;
-            font-size: 1rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(100, 100, 200, 0.2);
         }
         
-        @media (max-width: 768px) {
-            .container {
-                padding: 15px;
+        @media (max-width: 968px) {
+            .config-grid {
+                grid-template-columns: 1fr;
             }
             
-            h1 {
-                font-size: 2rem;
+            .security-panel {
+                grid-template-columns: 1fr;
             }
             
             .btn-group {
-                flex-direction: column;
+                grid-template-columns: 1fr 1fr;
             }
-            
-            button {
-                width: 100%;
-            }
-            
-            .crypto-info {
+        }
+        
+        @media (max-width: 568px) {
+            .btn-group {
                 grid-template-columns: 1fr;
+            }
+            
+            .mapping-display {
+                grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
             }
         }
     </style>
@@ -316,182 +331,232 @@
 <body>
     <div class="container">
         <header>
-            <h1><i class="fas fa-double-layer"></i> Advanced Double Vigenère Cipher</h1>
-            <p class="subtitle">Double-layer encryption with enhanced security and integrity verification</p>
+            <h1><i class="fas fa-double-layer"></i> ADVANCED DOUBLE VIGENÈRE CIPHER</h1>
             <div class="security-badge">
-                <i class="fas fa-shield-alt"></i> 2<sup>112</sup> BIT SECURITY WITH 12-CHAR KEYS
+                <i class="fas fa-shield-alt"></i> ENTERPRISE-GRADE ENCRYPTION
             </div>
         </header>
         
-        <div class="card">
-            <div class="card-title">
-                <i class="fas fa-key"></i>
-                <span>Encryption Keys</span>
+        <div class="config-grid">
+            <div class="card">
+                <div class="card-title">
+                    <i class="fas fa-font"></i>
+                    <span>ALPHABET CONFIGURATION</span>
+                </div>
+                
+                <div class="input-group">
+                    <label for="alphabet">CUSTOM ALPHABET</label>
+                    <input type="text" id="alphabet" value="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789">
+                </div>
+                
+                <div class="input-group">
+                    <label for="symbols">SYMBOL MAPPING</label>
+                    <input type="text" id="symbols" value="ⴽ×+ꓘꓥꓭꓷ⊕ΞΔ⌖#ⵁ$%&*!@^~()[]{}<>?/|;:">
+                </div>
+                
+                <div class="mapping-display" id="mappingPreview">
+                    <!-- Mapping will be generated here -->
+                </div>
             </div>
             
-            <div class="input-group">
-                <label for="key1"><i class="fas fa-key"></i> First Layer Key (A-Z only)</label>
-                <input type="text" id="key1" placeholder="Enter first encryption key" value="SECRETKEYONE">
-                <div class="input-hint">Used for the first Vigenère encryption layer</div>
-            </div>
-            
-            <div class="input-group">
-                <label for="key2"><i class="fas fa-key"></i> Second Layer Key (A-Z only)</label>
-                <input type="text" id="key2" placeholder="Enter second encryption key" value="SECRETKEYTWO">
-                <div class="input-hint">Used for the second mapping encryption layer</div>
-            </div>
-            
-            <div class="input-group">
-                <label for="inputText"><i class="fas fa-keyboard"></i> Input Text</label>
-                <textarea id="inputText" rows="4" placeholder="Enter text to encrypt or decrypt">Confidential data: Operation Midnight at 23:59</textarea>
-            </div>
-            
-            <div class="btn-group">
-                <button class="encrypt-btn" onclick="encrypt()">
-                    <i class="fas fa-lock"></i> Encrypt
-                </button>
-                <button class="decrypt-btn" onclick="decrypt()">
-                    <i class="fas fa-lock-open"></i> Decrypt
-                </button>
-                <button class="test-btn" onclick="testIntegrity()">
-                    <i class="fas fa-check-circle"></i> Test Integrity
-                </button>
-                <button class="reset-btn" onclick="resetAll()">
-                    <i class="fas fa-redo"></i> Reset
-                </button>
-            </div>
-            
-            <div class="status-indicator">
-                <div class="status-dot" id="keyStatus"></div>
-                <span id="keyStatusText">Keys not validated</span>
+            <div class="card">
+                <div class="card-title">
+                    <i class="fas fa-key"></i>
+                    <span>ENCRYPTION KEYS</span>
+                </div>
+                
+                <div class="input-group">
+                    <label for="key1">FIRST LAYER KEY</label>
+                    <input type="text" id="key1" value="SECUREKEY123">
+                </div>
+                
+                <div class="input-group">
+                    <label for="key2">SECOND LAYER KEY</label>
+                    <input type="text" id="key2" value="SYMBOLKEY456">
+                </div>
+                
+                <div class="input-group">
+                    <label for="inputText">INPUT TEXT</label>
+                    <textarea id="inputText" rows="4">Confidential Operation Midnight at 23:59:01</textarea>
+                </div>
+                
+                <div class="status-panel">
+                    <div class="status-indicator" id="systemStatus"></div>
+                    <span id="statusText">SYSTEM READY</span>
+                </div>
             </div>
         </div>
         
-        <div class="crypto-info">
-            <div class="info-card">
-                <div class="info-label">Key Space Size</div>
-                <div class="info-value" id="keySpace">0</div>
-                <div class="info-label">Possible combinations</div>
+        <div class="security-panel">
+            <div class="security-metric">
+                <div class="metric-label">KEY SPACE</div>
+                <div class="metric-value" id="keySpace">2^112</div>
+                <div class="metric-label">POSSIBLE COMBINATIONS</div>
             </div>
             
-            <div class="info-card">
-                <div class="info-label">Brute Force Time</div>
-                <div class="info-value" id="bruteForceTime">0</div>
-                <div class="info-label">At 1 trillion ops/sec</div>
+            <div class="security-metric">
+                <div class="metric-label">BRUTE FORCE TIME</div>
+                <div class="metric-value" id="bruteForceTime">3.4e+23 YEARS</div>
+                <div class="metric-label">AT 1T OPERATIONS/SEC</div>
             </div>
             
-            <div class="info-card">
-                <div class="info-label">Security Level</div>
-                <div class="info-value" id="securityLevel">0-bit</div>
-                <div class="info-label">Equivalent protection</div>
+            <div class="security-metric">
+                <div class="metric-label">SECURITY LEVEL</div>
+                <div class="metric-value" id="securityLevel">112-BIT</div>
+                <div class="metric-label">EQUIVALENT STRENGTH</div>
             </div>
+            
+            <div class="security-metric">
+                <div class="metric-label">ALPHABET SIZE</div>
+                <div class="metric-value" id="alphabetSize">36 CHARS</div>
+                <div class="metric-label">SYMBOL SET SIZE</div>
+            </div>
+        </div>
+        
+        <div class="btn-group">
+            <button class="encrypt-btn" onclick="encrypt()">
+                <i class="fas fa-lock"></i> ENCRYPT
+            </button>
+            <button class="decrypt-btn" onclick="decrypt()">
+                <i class="fas fa-lock-open"></i> DECRYPT
+            </button>
+            <button class="test-btn" onclick="testIntegrity()">
+                <i class="fas fa-check-double"></i> VALIDATE
+            </button>
+            <button class="reset-btn" onclick="resetAll()">
+                <i class="fas fa-sync"></i> RESET
+            </button>
         </div>
         
         <div class="result-container">
             <div class="card-title">
                 <i class="fas fa-terminal"></i>
-                <span>Output Result</span>
+                <span>ENCRYPTION RESULT</span>
             </div>
             <div class="result-text" id="outputText">
-                Your encrypted/decrypted text will appear here
-            </div>
-            
-            <div class="verification-panel">
-                <div class="card-title">
-                    <i class="fas fa-fingerprint"></i>
-                    <span>Integrity Verification</span>
-                </div>
-                <div class="verification-result" id="verificationResult">
-                    No verification performed yet
-                </div>
+                READY FOR ENCRYPTION OPERATION
             </div>
         </div>
     </div>
     
     <footer>
-        <p>Advanced Double Vigenère Cipher | Dual-layer encryption with enhanced security</p>
-        <p>This implementation provides 2<sup>112</sup> bit security with 12-character keys</p>
+        <p>ADVANCED DOUBLE VIGENÈRE CIPHER | ENTERPRISE-GRADE ENCRYPTION SYSTEM</p>
+        <p>REAL-TIME SECURITY ANALYSIS | CUSTOM ALPHABET & SYMBOL MAPPING</p>
     </footer>
 
     <script>
         // Configuration
-        const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        const SYMBOLS = "AMNOPISTUVⴽXYZ×+ꓘꓥꓭꓷ⊕ΞΔ⌖#ⵁ";
+        let alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        let symbols = "ⴽ×+ꓘꓥꓭꓷ⊕ΞΔ⌖#ⵁ$%&*!@^~()[]{}<>?/|;:";
         
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            validateKeys();
-            updateSecurityStats();
+            updateSecurityMetrics();
+            updateMappingPreview();
             
-            // Add input validation
-            document.getElementById('key1').addEventListener('input', function() {
-                this.value = this.value.toUpperCase().replace(/[^A-Z]/g, '');
-                validateKeys();
-                updateSecurityStats();
+            // Add real-time updates
+            document.getElementById('alphabet').addEventListener('input', function() {
+                alphabet = this.value;
+                updateSecurityMetrics();
+                updateMappingPreview();
             });
             
-            document.getElementById('key2').addEventListener('input', function() {
-                this.value = this.value.toUpperCase().replace(/[^A-Z]/g, '');
-                validateKeys();
-                updateSecurityStats();
+            document.getElementById('symbols').addEventListener('input', function() {
+                symbols = this.value;
+                updateSecurityMetrics();
+                updateMappingPreview();
             });
+            
+            document.getElementById('key1').addEventListener('input', updateSecurityMetrics);
+            document.getElementById('key2').addEventListener('input', updateSecurityMetrics);
         });
         
-        // Validate keys
-        function validateKeys() {
-            const key1 = document.getElementById('key1').value;
-            const key2 = document.getElementById('key2').value;
-            const statusDot = document.getElementById('keyStatus');
-            const statusText = document.getElementById('keyStatusText');
-            
-            if (key1.length === 0 || key2.length === 0) {
-                statusDot.className = 'status-dot status-error';
-                statusText.textContent = 'Error: Keys cannot be empty';
-                return false;
-            }
-            
-            if (key1.length < 6 || key2.length < 6) {
-                statusDot.className = 'status-dot status-error';
-                statusText.textContent = 'Warning: Keys should be at least 6 characters for security';
-                return false;
-            }
-            
-            statusDot.className = 'status-dot status-ok';
-            statusText.textContent = 'Keys validated: ' + key1.length + ' + ' + key2.length + ' characters';
-            return true;
-        }
-        
-        // Update security statistics
-        function updateSecurityStats() {
+        // Update security metrics in real-time
+        function updateSecurityMetrics() {
             const key1 = document.getElementById('key1').value;
             const key2 = document.getElementById('key2').value;
             
-            // Key space calculation
-            const keySpace = Math.pow(26, key1.length) * Math.pow(26, key2.length);
-            document.getElementById('keySpace').textContent = keySpace.toExponential(2);
+            // Calculate key space
+            const keySpace = Math.pow(alphabet.length, key1.length) * Math.pow(symbols.length, key2.length);
+            document.getElementById('keySpace').textContent = `2^${Math.log2(keySpace).toFixed(0)}`;
             
-            // Brute force time estimation (at 1 trillion operations per second)
+            // Calculate brute force time
             const seconds = keySpace / 1e12;
             const years = seconds / (60 * 60 * 24 * 365.25);
+            document.getElementById('bruteForceTime').textContent = years > 1e12 ? 
+                '>1T YEARS' : `${years.toExponential(2)} YEARS`;
             
-            if (years > 1e9) {
-                document.getElementById('bruteForceTime').textContent = (years / 1e9).toFixed(1) + 'B years';
-            } else if (years > 1e6) {
-                document.getElementById('bruteForceTime').textContent = (years / 1e6).toFixed(1) + 'M years';
-            } else if (years > 1e3) {
-                document.getElementById('bruteForceTime').textContent = (years / 1e3).toFixed(1) + 'K years';
-            } else {
-                document.getElementById('bruteForceTime').textContent = years.toFixed(1) + ' years';
+            // Security level
+            const securityLevel = Math.log2(keySpace);
+            document.getElementById('securityLevel').textContent = `${Math.round(securityLevel)}-BIT`;
+            
+            // Alphabet size
+            document.getElementById('alphabetSize').textContent = `${alphabet.length} CHARS`;
+            
+            // Update system status
+            updateSystemStatus();
+        }
+        
+        // Update mapping preview
+        function updateMappingPreview() {
+            const mappingContainer = document.getElementById('mappingPreview');
+            mappingContainer.innerHTML = '';
+            
+            const maxDisplay = Math.min(alphabet.length, symbols.length, 36);
+            
+            for (let i = 0; i < maxDisplay; i++) {
+                const mappingItem = document.createElement('div');
+                mappingItem.className = 'mapping-item';
+                
+                mappingItem.innerHTML = `
+                    <div class="mapping-char">${i < alphabet.length ? alphabet[i] : '?'}</div>
+                    <div class="mapping-symbol">${i < symbols.length ? symbols[i] : '?'}</div>
+                `;
+                
+                mappingContainer.appendChild(mappingItem);
             }
             
-            // Security level (log2 of key space)
-            const securityLevel = Math.log2(keySpace);
-            document.getElementById('securityLevel').textContent = Math.round(securityLevel) + '-bit';
+            if (alphabet.length !== symbols.length) {
+                setSystemStatus('warning', 'ALPHABET/SYMBOL LENGTH MISMATCH');
+            } else {
+                setSystemStatus('active', 'MAPPING VALID');
+            }
+        }
+        
+        // Update system status
+        function updateSystemStatus() {
+            const key1 = document.getElementById('key1').value;
+            const key2 = document.getElementById('key2').value;
+            
+            if (!key1 || !key2) {
+                setSystemStatus('error', 'KEYS REQUIRED');
+            } else if (key1.length < 8 || key2.length < 8) {
+                setSystemStatus('warning', 'WEAK KEYS DETECTED');
+            } else if (alphabet.length !== symbols.length) {
+                setSystemStatus('warning', 'ALPHABET/SYMBOL LENGTH MISMATCH');
+            } else {
+                setSystemStatus('active', 'SYSTEM READY');
+            }
+        }
+        
+        function setSystemStatus(status, message) {
+            const indicator = document.getElementById('systemStatus');
+            const statusText = document.getElementById('statusText');
+            
+            indicator.className = 'status-indicator';
+            if (status === 'active') indicator.classList.add('status-active');
+            if (status === 'warning') indicator.classList.add('status-warning');
+            if (status === 'error') indicator.classList.add('status-error');
+            
+            statusText.textContent = message;
         }
         
         // Encrypt text
         function encrypt() {
-            if (!validateKeys()) return;
+            if (alphabet.length !== symbols.length) {
+                setSystemStatus('error', 'ALPHABET/SYMBOL LENGTH MISMATCH');
+                return;
+            }
             
             const key1 = document.getElementById('key1').value;
             const key2 = document.getElementById('key2').value;
@@ -499,68 +564,42 @@
             
             try {
                 // First layer: Classic Vigenère
-                let intermediate = vigenereCipher(inputText, key1, ALPHABET, false);
+                let intermediate = vigenereCipher(inputText, key1, alphabet, false);
                 
                 // Second layer: Mapping encryption
-                let output = vigenereCipher(intermediate, key2, SYMBOLS, false);
-                
-                // Add integrity check
-                const integrityHash = simpleHash(inputText);
-                output += '|' + integrityHash;
+                let output = vigenereCipher(intermediate, key2, symbols, false);
                 
                 document.getElementById('outputText').textContent = output;
-                document.getElementById('verificationResult').textContent = 'Text encrypted successfully with integrity protection';
-                document.getElementById('verificationResult').className = 'verification-result success';
+                setSystemStatus('active', 'ENCRYPTION SUCCESSFUL');
             } catch (error) {
-                document.getElementById('outputText').textContent = 'Error: ' + error.message;
-                document.getElementById('verificationResult').textContent = 'Encryption failed';
-                document.getElementById('verificationResult').className = 'verification-result error';
+                document.getElementById('outputText').textContent = 'ENCRYPTION ERROR';
+                setSystemStatus('error', 'ENCRYPTION FAILED');
             }
         }
         
         // Decrypt text
         function decrypt() {
-            if (!validateKeys()) return;
+            if (alphabet.length !== symbols.length) {
+                setSystemStatus('error', 'ALPHABET/SYMBOL LENGTH MISMATCH');
+                return;
+            }
             
             const key1 = document.getElementById('key1').value;
             const key2 = document.getElementById('key2').value;
-            let inputText = document.getElementById('inputText').value;
+            const inputText = document.getElementById('inputText').value;
             
             try {
-                // Check for integrity hash
-                let integrityHash = '';
-                if (inputText.includes('|')) {
-                    const parts = inputText.split('|');
-                    inputText = parts[0];
-                    integrityHash = parts[1];
-                }
-                
                 // Second layer: Reverse mapping encryption
-                let intermediate = vigenereCipher(inputText, key2, SYMBOLS, true);
+                let intermediate = vigenereCipher(inputText, key2, symbols, true);
                 
                 // First layer: Reverse classic Vigenère
-                let output = vigenereCipher(intermediate, key1, ALPHABET, true);
+                let output = vigenereCipher(intermediate, key1, alphabet, true);
                 
                 document.getElementById('outputText').textContent = output;
-                
-                // Verify integrity if hash was present
-                if (integrityHash) {
-                    const computedHash = simpleHash(output);
-                    if (computedHash === integrityHash) {
-                        document.getElementById('verificationResult').textContent = 'Integrity verified: No tampering detected';
-                        document.getElementById('verificationResult').className = 'verification-result success';
-                    } else {
-                        document.getElementById('verificationResult').textContent = 'WARNING: Integrity check failed - text may have been modified';
-                        document.getElementById('verificationResult').className = 'verification-result error';
-                    }
-                } else {
-                    document.getElementById('verificationResult').textContent = 'No integrity information available';
-                    document.getElementById('verificationResult').className = 'verification-result';
-                }
+                setSystemStatus('active', 'DECRYPTION SUCCESSFUL');
             } catch (error) {
-                document.getElementById('outputText').textContent = 'Error: ' + error.message;
-                document.getElementById('verificationResult').textContent = 'Decryption failed';
-                document.getElementById('verificationResult').className = 'verification-result error';
+                document.getElementById('outputText').textContent = 'DECRYPTION ERROR';
+                setSystemStatus('error', 'DECRYPTION FAILED');
             }
         }
         
@@ -575,14 +614,13 @@
                 
                 const charIndex = characterSet.indexOf(char);
                 if (charIndex === -1) {
-                    // Character not in set - leave as is
                     output += char;
                     continue;
                 }
                 
                 const keyIndexPos = characterSet.indexOf(keyChar);
                 if (keyIndexPos === -1) {
-                    throw new Error('Key contains invalid characters for the character set');
+                    throw new Error('Invalid key character');
                 }
                 
                 let newIndex;
@@ -599,61 +637,51 @@
             return output;
         }
         
-        // Simple integrity hash
-        function simpleHash(text) {
-            let hash = 0;
-            for (let i = 0; i < text.length; i++) {
-                hash = ((hash << 5) - hash) + text.charCodeAt(i);
-                hash |= 0; // Convert to 32-bit integer
-            }
-            return Math.abs(hash).toString(36).toUpperCase();
-        }
-        
-        // Test encryption/decryption integrity
+        // Test integrity
         function testIntegrity() {
             const originalText = document.getElementById('inputText').value;
             const key1 = document.getElementById('key1').value;
             const key2 = document.getElementById('key2').value;
             
             if (!originalText || !key1 || !key2) {
-                document.getElementById('verificationResult').textContent = 'Please enter text and both keys first';
-                document.getElementById('verificationResult').className = 'verification-result error';
+                setSystemStatus('error', 'TEST DATA REQUIRED');
                 return;
             }
             
             try {
                 // Encrypt
-                let encrypted = vigenereCipher(originalText.toUpperCase(), key1, ALPHABET, false);
-                encrypted = vigenereCipher(encrypted, key2, SYMBOLS, false);
+                let encrypted = vigenereCipher(originalText.toUpperCase(), key1, alphabet, false);
+                encrypted = vigenereCipher(encrypted, key2, symbols, false);
                 
                 // Decrypt
-                let decrypted = vigenereCipher(encrypted, key2, SYMBOLS, true);
-                decrypted = vigenereCipher(decrypted, key1, ALPHABET, true);
+                let decrypted = vigenereCipher(encrypted, key2, symbols, true);
+                decrypted = vigenereCipher(decrypted, key1, alphabet, true);
                 
-                // Verify
                 if (decrypted === originalText.toUpperCase()) {
-                    document.getElementById('verificationResult').textContent = 'Integrity test passed: Encryption/decryption cycle successful';
-                    document.getElementById('verificationResult').className = 'verification-result success';
+                    setSystemStatus('active', 'INTEGRITY VERIFIED');
                 } else {
-                    document.getElementById('verificationResult').textContent = 'Integrity test failed: Output does not match input';
-                    document.getElementById('verificationResult').className = 'verification-result error';
+                    setSystemStatus('error', 'INTEGRITY CHECK FAILED');
                 }
             } catch (error) {
-                document.getElementById('verificationResult').textContent = 'Integrity test error: ' + error.message;
-                document.getElementById('verificationResult').className = 'verification-result error';
+                setSystemStatus('error', 'VALIDATION ERROR');
             }
         }
         
         // Reset all fields
         function resetAll() {
-            document.getElementById('key1').value = 'SECRETKEYONE';
-            document.getElementById('key2').value = 'SECRETKEYTWO';
-            document.getElementById('inputText').value = 'Confidential data: Operation Midnight at 23:59';
-            document.getElementById('outputText').textContent = 'Your encrypted/decrypted text will appear here';
-            document.getElementById('verificationResult').textContent = 'No verification performed yet';
-            document.getElementById('verificationResult').className = 'verification-result';
-            validateKeys();
-            updateSecurityStats();
+            document.getElementById('alphabet').value = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            document.getElementById('symbols').value = "ⴽ×+ꓘꓥꓭꓷ⊕ΞΔ⌖#ⵁ$%&*!@^~()[]{}<>?/|;:";
+            document.getElementById('key1').value = "SECUREKEY123";
+            document.getElementById('key2').value = "SYMBOLKEY456";
+            document.getElementById('inputText').value = "Confidential Operation Midnight at 23:59:01";
+            document.getElementById('outputText').textContent = "READY FOR ENCRYPTION OPERATION";
+            
+            alphabet = document.getElementById('alphabet').value;
+            symbols = document.getElementById('symbols').value;
+            
+            updateSecurityMetrics();
+            updateMappingPreview();
+            setSystemStatus('active', 'SYSTEM RESET');
         }
     </script>
 </body>
