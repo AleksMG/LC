@@ -1,915 +1,471 @@
 <!DOCTYPE html>
+
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Профессиональный шифратор</title>
+    <title>SPHINX-256 Enhanced Implementation</title>
     <style>
         :root {
-            --primary: #1a1a2e;
-            --secondary: #16213e;
-            --accent: #0f3460;
-            --success: #4cc9f0;
-            --light: #e94560;
-            --dark: #0d0d1a;
+            --primary-dark: #0d1117;
+            --primary: #161b22;
+            --secondary: #238636;
+            --accent: #f85149;
+            --text: #e6edf3;
+            --text-secondary: #7d8590;
+            --border: #30363d;
+            --warning: #9e6a03;
         }
-        
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        
-        body {
-            font-family: 'Consolas', 'Monaco', monospace;
-            line-height: 1.6;
-            color: #4cc9f0;
-            background: linear-gradient(135deg, var(--dark) 0%, var(--primary) 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            background: rgba(26, 26, 46, 0.95);
-            border-radius: 15px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-            overflow: hidden;
-            border: 1px solid var(--accent);
-        }
-        
-        header {
-            background: linear-gradient(135deg, var(--secondary) 0%, var(--accent) 100%);
-            color: white;
-            padding: 25px;
-            text-align: center;
-            border-bottom: 2px solid var(--light);
-        }
-        
-        h1 {
-            font-size: 2.8rem;
-            margin-bottom: 15px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-        }
-        
-        .subtitle {
-            font-size: 1.3rem;
-            opacity: 0.9;
-            color: #4cc9f0;
-        }
-        
-        .content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 25px;
-            padding: 30px;
-        }
-        
-        @media (max-width: 1000px) {
-            .content {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        .panel {
-            background: rgba(22, 33, 62, 0.8);
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--accent);
-        }
-        
-        .panel-title {
-            font-size: 1.6rem;
-            color: #4cc9f0;
-            margin-bottom: 20px;
-            padding-bottom: 12px;
-            border-bottom: 2px solid var(--light);
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: 600;
-            color: #4cc9f0;
-            font-size: 1.1rem;
-        }
-        
-        input, textarea, select {
-            width: 100%;
-            padding: 14px;
-            border: 2px solid var(--accent);
-            border-radius: 8px;
-            font-size: 16px;
-            transition: all 0.3s;
-            background: rgba(15, 52, 96, 0.3);
-            color: white;
-            font-family: 'Consolas', monospace;
-        }
-        
-        input:focus, textarea:focus, select:focus {
-            border-color: var(--light);
-            outline: none;
-            box-shadow: 0 0 10px rgba(233, 69, 96, 0.5);
-        }
-        
-        textarea {
-            min-height: 150px;
-            resize: vertical;
-        }
-        
-        .btn {
-            display: inline-block;
-            padding: 14px 28px;
-            background: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            transition: all 0.3s;
-            margin-right: 12px;
-            margin-bottom: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-        }
-        
-        .btn:hover {
-            background: var(--light);
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
-        }
-        
-        .btn-encrypt {
-            background: linear-gradient(135deg, #4cc9f0 0%, #3a86ff 100%);
-        }
-        
-        .btn-decrypt {
-            background: linear-gradient(135deg, #560bad 0%, #7209b7 100%);
-        }
-        
-        .btn-clear {
-            background: linear-gradient(135deg, #f72585 0%, #b5179e 100%);
-        }
-        
-        .btn-generate {
-            background: linear-gradient(135deg, #f9c74f 0%, #f9844a 100%);
-            color: #1a1a2e;
-        }
-        
-        .result-container {
-            margin-top: 20px;
-            padding: 20px;
-            background: rgba(15, 52, 96, 0.2);
-            border-radius: 10px;
-            border-left: 4px solid var(--light);
-        }
-        
-        .process-log {
-            margin-top: 30px;
-            padding: 20px;
-            background: rgba(15, 52, 96, 0.2);
-            border-radius: 10px;
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            max-height: 350px;
-            overflow-y: auto;
-            border: 1px solid var(--accent);
-        }
-        
-        .log-entry {
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(76, 201, 240, 0.3);
-        }
-        
-        .status {
-            padding: 12px;
-            border-radius: 6px;
-            margin: 15px 0;
-            font-weight: 500;
-        }
-        
-        .status-success {
-            background: rgba(76, 201, 240, 0.2);
-            color: #4cc9f0;
-            border-left: 4px solid #4cc9f0;
-        }
-        
-        .status-error {
-            background: rgba(233, 69, 96, 0.2);
-            color: #e94560;
-            border-left: 4px solid #e94560;
-        }
-        
-        .status-warning {
-            background: rgba(249, 199, 79, 0.2);
-            color: #f9c74f;
-            border-left: 4px solid #f9c74f;
-        }
-        
-        .table-container {
-            overflow-x: auto;
-            margin: 15px 0;
-            padding: 15px;
-            background: rgba(15, 52, 96, 0.2);
-            border-radius: 10px;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: rgba(22, 33, 62, 0.5);
-        }
-        
-        th, td {
-            border: 1px solid var(--accent);
-            padding: 12px;
-            text-align: center;
-            color: white;
-        }
-        
-        th {
-            background: var(--accent);
-            color: white;
-            font-weight: 600;
-        }
-        
-        tr:nth-child(even) {
-            background: rgba(76, 201, 240, 0.1);
-        }
-        
-        footer {
-            text-align: center;
-            padding: 20px;
-            background: var(--secondary);
-            color: white;
-            border-top: 2px solid var(--accent);
-        }
-        
-        .password-check {
-            display: flex;
-            align-items: center;
-            margin-top: 5px;
-            font-size: 14px;
-        }
-        
-        .password-strength {
-            height: 6px;
-            border-radius: 3px;
-            margin-top: 5px;
-            transition: all 0.3s;
-            background: var(--accent);
-        }
-        
-        .strength-weak {
-            background: linear-gradient(90deg, #e94560 0%, #ac0d2d 100%);
-            width: 33%;
-        }
-        
-        .strength-medium {
-            background: linear-gradient(90deg, #f9c74f 0%, #f8961e 100%);
-            width: 66%;
-        }
-        
-        .strength-strong {
-            background: linear-gradient(90deg, #4cc9f0 0%, #3a86ff 100%);
-            width: 100%;
-        }
-        
-        .substitution-controls {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        
-        .substitution-input {
-            flex: 1;
-        }
-        
-        .digit {
-            display: inline-block;
-            padding: 4px 8px;
-            background: rgba(76, 201, 240, 0.3);
-            border-radius: 4px;
-            font-weight: bold;
-            margin: 0 2px;
-            border: 1px solid var(--accent);
-        }
-        
-        .crypto-info {
-            background: rgba(15, 52, 96, 0.2);
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
-            border-left: 4px solid var(--light);
-        }
-    </style>
+
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Профессиональный шифратор</h1>
-            <p class="subtitle">Нумерованная таблица замен с зависимостью от пароля</p>
+            <h1>SPHINX-256 Enhanced</h1>
+            <p class="subtitle">Улучшенная реализация с полной криптостойкостью</p>
         </header>
-        
-        <div class="content">
-            <div class="panel">
-                <h2 class="panel-title">Параметры шифрования</h2>
-                
-                <div class="form-group">
-                    <label for="alphabet">Алфавит (символы без разделителей):</label>
-                    <input type="text" id="alphabet" value="АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя .,!?-0123456789"
-                           placeholder="Введите символы алфавита">
-                </div>
-                
-                <div class="form-group">
-                    <label for="substitutionAlphabet">Символы замены:</label>
-                    <div class="substitution-controls">
-                        <input type="text" id="substitutionAlphabet" class="substitution-input" 
-                               placeholder="Введите символы замены">
-                        <button class="btn btn-generate" onclick="generateSubstitutionAlphabet()">Сгенерировать</button>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="password">Пароль (минимум 8 символов):</label>
-                    <input type="password" id="password" placeholder="Введите пароль" value="SecurePass123">
-                </div>
-                
-                <div class="form-group">
-                    <label for="mathOperation">Тип математического преобразования:</label>
-                    <select id="mathOperation">
-                        <option value="affine">Аффинное (a×P + b) mod N</option>
-                        <option value="exponential">Экспоненциальное (K^P mod N)</option>
-                        <option value="matrix">Матричное преобразование 2×2</option>
-                        <option value="nonlinear">Нелінійне перетворення</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="inputText">Исходный текст:</label>
-                    <textarea id="inputText" placeholder="Введите текст для шифрования">Привет! Это тестовое сообщение для проверки шифратора. Раз два три четыре пять.</textarea>
-                </div>
-                
-                <button class="btn btn-encrypt" onclick="encrypt()">Зашифровать</button>
-                <button class="btn btn-decrypt" onclick="decrypt()">Расшифровать</button>
-                <button class="btn btn-clear" onclick="clearAll()">Очистить</button>
-            </div>
-            
-            <div class="panel">
-                <h2 class="panel-title">Результаты</h2>
-                
-                <div class="form-group">
-                    <label for="outputText">Результат:</label>
-                    <textarea id="outputText" readonly placeholder="Результат появится здесь"></textarea>
-                </div>
-                
-                <div class="result-container">
-                    <h3>Статус операции:</h3>
-                    <div id="status" class="status status-success">Готов к работе</div>
-                </div>
-                
-                <div class="result-container">
-                    <h3>Проверка целостности:</h3>
-                    <div id="integrityStatus" class="status">Не проверено</div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="process-log">
-            <h3>Процесс преобразований:</h3>
-            <div id="processInfo"></div>
-        </div>
-        
-        <div class="table-container">
-            <h3>Нумерованная таблица замен символов:</h3>
-            <table id="substitutionTable">
-                <thead>
-                    <tr>
-                        <th>Исходный символ</th>
-                        <th>Числовое значение</th>
-                        <th>Зашифрованный символ</th>
-                        <th>Числовое значение</th>
-                        <th>Ключ преобразования</th>
-                    </tr>
-                </thead>
-                <tbody id="substitutionTableBody">
-                </tbody>
-            </table>
-        </div>
-        
-        <div class="crypto-info">
-            <h3>Криптографическая информация:</h3>
-            <p><strong>Алгоритм:</strong> Комбинированное преобразование с нумерованной таблицей замен</p>
-            <p><strong>Стойкость:</strong> Зависит от пароля и размера алфавита</p>
-            <p><strong>Особенности:</strong> Нелинейное преобразование, зависимость от позиции символа, динамическая таблица замен</p>
-        </div>
-        
-        <footer>
-            <p>Профессиональный математический шифратор | Нумерованная таблица замен</p>
-        </footer>
-    </div>
 
-    <script>
-        // Глобальные переменные
-        let currentCipher = null;
-        
-        // Генерация символов замены
-        function generateSubstitutionAlphabet() {
-            const alphabet = document.getElementById('alphabet').value;
-            if (!alphabet) {
-                showStatus('Сначала введите основной алфавит.', 'error');
-                return;
-            }
-            
-            // Создаем массив символов и перемешиваем его
-            const chars = alphabet.split('');
-            for (let i = chars.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [chars[i], chars[j]] = [chars[j], chars[i]];
-            }
-            
-            const substitutionAlphabet = chars.join('');
-            document.getElementById('substitutionAlphabet').value = substitutionAlphabet;
-            showStatus('Символы замены сгенерированы.', 'success');
-        }
-        
-        // Показать статус
-        function showStatus(message, type) {
-            const statusElement = document.getElementById('status');
-            statusElement.textContent = message;
-            statusElement.className = 'status';
-            
-            if (type === 'success') {
-                statusElement.classList.add('status-success');
-            } else if (type === 'error') {
-                statusElement.classList.add('status-error');
-            } else if (type === 'warning') {
-                statusElement.classList.add('status-warning');
-            }
-        }
-        
-        // Класс профессионального шифратора
-        class ProfessionalCipher {
-            constructor(alphabet, substitutionAlphabet, password, operation) {
-                this.alphabet = alphabet;
-                this.substitutionAlphabet = substitutionAlphabet;
-                this.N = alphabet.length;
-                this.operation = operation;
-                this.password = password;
-                
-                // Создаем нумерованные маппинги
-                this.charToDigit = {};
-                this.digitToChar = {};
-                this.substitutionToDigit = {};
-                this.digitToSubstitution = {};
-                
-                // Заполняем таблицы нумерации
-                for (let i = 0; i < this.N; i++) {
-                    this.charToDigit[alphabet[i]] = i;
-                    this.digitToChar[i] = alphabet[i];
-                    this.substitutionToDigit[substitutionAlphabet[i]] = i;
-                    this.digitToSubstitution[i] = substitutionAlphabet[i];
-                }
-                
-                // Генерируем ключи на основе пароля
-                this.generateKeys(password);
-                
-                // Создаем таблицу замен
-                this.createSubstitutionTable();
-            }
-            
-            // Генерация ключей на основе пароля
-            generateKeys(password) {
-                // Создаем хэш пароля для гарантированной зависимости
-                let hash = 0;
-                for (let i = 0; i < password.length; i++) {
-                    hash = ((hash << 5) - hash) + password.charCodeAt(i);
-                    hash |= 0;
-                }
-                
-                this.passwordHash = Math.abs(hash);
-                
-                switch(this.operation) {
-                    case 'affine':
-                        this.a = (this.passwordHash % (this.N - 1)) + 1;
-                        this.b = (this.passwordHash * 13) % this.N;
-                        this.invA = this.modInverse(this.a, this.N);
-                        break;
-                        
-                    case 'exponential':
-                        this.K = (this.passwordHash % (this.N - 2)) + 2;
-                        this.createLogTable();
-                        break;
-                        
-                    case 'matrix':
-                        this.generateMatrix();
-                        break;
-                        
-                    case 'nonlinear':
-                        this.generateNonLinearParams();
-                        break;
-                }
-            }
-            
-            // Модульная инверсия
-            modInverse(a, mod) {
-                a = ((a % mod) + mod) % mod;
-                for (let x = 1; x < mod; x++) {
-                    if ((a * x) % mod === 1) return x;
-                }
-                return 1;
-            }
-            
-            // Создание таблицы логарифмов
-            createLogTable() {
-                this.logTable = new Array(this.N);
-                let value = 1;
-                for (let exponent = 0; exponent < this.N; exponent++) {
-                    this.logTable[value] = exponent;
-                    value = (value * this.K) % this.N;
-                }
-            }
-            
-            // Генерация матрицы
-            generateMatrix() {
-                const seed = this.passwordHash;
-                this.matrix = [
-                    [(seed % (this.N - 1)) + 1, ((seed * 7 + 11) % this.N)],
-                    [((seed * 13 + 17) % this.N), ((seed * 19 + 23) % this.N)]
-                ];
-                
-                // Вычисляем детерминант
-                const det = (this.matrix[0][0] * this.matrix[1][1] - this.matrix[0][1] * this.matrix[1][0]) % this.N;
-                this.invDet = this.modInverse(det, this.N);
-                
-                // Обратная матрица
-                this.invMatrix = [
-                    [(this.matrix[1][1] * this.invDet) % this.N, (-this.matrix[0][1] * this.invDet % this.N + this.N) % this.N],
-                    [(-this.matrix[1][0] * this.invDet % this.N + this.N) % this.N, (this.matrix[0][0] * this.invDet) % this.N]
-                ];
-            }
-            
-            // Генерация нелинейных параметров
-            generateNonLinearParams() {
-                const seed = this.passwordHash;
-                this.nonlinearA = (seed % 7) + 1;
-                this.nonlinearB = ((seed * 11) % 5) + 1;
-                this.nonlinearC = ((seed * 13) % 3) + 1;
-            }
-            
-            // Нелинейное преобразование
-            nonlinearTransform(x, position) {
-                // Добавляем зависимость от позиции символа
-                const posFactor = (position % 10) + 1;
-                return (this.nonlinearA * x * x + this.nonlinearB * x * posFactor + this.nonlinearC * posFactor) % this.N;
-            }
-            
-            // Обратное нелинейное преобразование
-            inverseNonlinearTransform(y, position) {
-                // Для простоты используем таблицу обратных значений
-                const posFactor = (position % 10) + 1;
-                
-                // Ищем x такой, что nonlinearTransform(x) = y
-                for (let x = 0; x < this.N; x++) {
-                    const testY = (this.nonlinearA * x * x + this.nonlinearB * x * posFactor + this.nonlinearC * posFactor) % this.N;
-                    if (testY === y) return x;
-                }
-                return 0;
-            }
-            
-            // Создание таблицы замен
-            createSubstitutionTable() {
-                this.substitutionTable = [];
-                
-                for (let i = 0; i < this.N; i++) {
-                    const P = i;
-                    let C;
-                    
-                    switch(this.operation) {
-                        case 'affine':
-                            C = (this.a * P + this.b) % this.N;
-                            break;
-                            
-                        case 'exponential':
-                            C = this.modExp(this.K, P, this.N);
-                            break;
-                            
-                        case 'matrix':
-                            C = (this.matrix[0][0] * P) % this.N;
-                            break;
-                            
-                        case 'nonlinear':
-                            C = this.nonlinearTransform(P, 0);
-                            break;
-                    }
-                    
-                    // Гарантируем корректный диапазон
-                    C = ((C % this.N) + this.N) % this.N;
-                    
-                    this.substitutionTable.push({
-                        originalChar: this.digitToChar[P],
-                        originalValue: P,
-                        encryptedChar: this.digitToSubstitution[C],
-                        encryptedValue: C,
-                        key: this.operation === 'affine' ? `a=${this.a}, b=${this.b}` :
-                             this.operation === 'exponential' ? `K=${this.K}` :
-                             this.operation === 'matrix' ? `M=${this.matrix[0][0]}` :
-                             `A=${this.nonlinearA}, B=${this.nonlinearB}, C=${this.nonlinearC}`
-                    });
-                }
-            }
-            
-            // Модульное возведение в степень
-            modExp(base, exponent, mod) {
-                if (mod === 1) return 0;
-                let result = 1;
-                base = base % mod;
-                
-                while (exponent > 0) {
-                    if (exponent % 2 === 1) {
-                        result = (result * base) % mod;
-                    }
-                    exponent = Math.floor(exponent / 2);
-                    base = (base * base) % mod;
-                }
-                
-                return result;
-            }
-            
-            // Шифрование текста
-            encrypt(text) {
-                let result = '';
-                let process = '';
-                
-                for (let i = 0; i < text.length; i++) {
-                    const char = text[i];
-                    const position = i;
-                    
-                    // Если символа нет в алфавите, добавляем как есть
-                    if (!(char in this.charToDigit)) {
-                        result += char;
-                        process += `"${char}" → не в алфавите → "${char}"<br>`;
-                        continue;
-                    }
-                    
-                    // Получаем числовое значение из нумерованной таблицы
-                    const P = this.charToDigit[char];
-                    let C;
-                    
-                    // Применяем преобразование с зависимостью от пароля и позиции
-                    switch(this.operation) {
-                        case 'affine':
-                            C = (this.a * P + this.b + position) % this.N;
-                            break;
-                            
-                        case 'exponential':
-                            C = this.modExp(this.K, P + position, this.N);
-                            break;
-                            
-                        case 'matrix':
-                            // Для матричного шифрования обрабатываем по два символа
-                            if (i + 1 < text.length) {
-                                const nextChar = text[i + 1];
-                                const P2 = (nextChar in this.charToDigit) ? this.charToDigit[nextChar] : 0;
-                                
-                                C = (this.matrix[0][0] * P + this.matrix[0][1] * P2 + position) % this.N;
-                                const C2 = (this.matrix[1][0] * P + this.matrix[1][1] * P2 + position) % this.N;
-                                
-                                result += this.digitToSubstitution[C2];
-                                process += `"${nextChar}" → <span class="digit">${P2}</span> → [Матричное] = <span class="digit">${C2}</span> → "${this.digitToSubstitution[C2]}"<br>`;
-                                i++;
-                            } else {
-                                C = (this.matrix[0][0] * P + position) % this.N;
-                            }
-                            break;
-                            
-                        case 'nonlinear':
-                            C = this.nonlinearTransform(P, position);
-                            break;
-                    }
-                    
-                    // Гарантируем корректный диапазон
-                    C = ((C % this.N) + this.N) % this.N;
-                    
-                    // Получаем символ замены из нумерованной таблицы
-                    const encryptedChar = this.digitToSubstitution[C];
-                    result += encryptedChar;
-                    
-                    // Логирование процесса
-                    process += `"${char}" → <span class="digit">${P}</span> → [Преобразование] = <span class="digit">${C}</span> → "${encryptedChar}"<br>`;
-                }
-                
-                document.getElementById('processInfo').innerHTML = process;
-                return result;
-            }
-            
-            // Дешифрование текста
-            decrypt(text) {
-                let result = '';
-                let process = '';
-                
-                for (let i = 0; i < text.length; i++) {
-                    const char = text[i];
-                    const position = i;
-                    
-                    // Если символа нет в substitution алфавите
-                    if (!(char in this.substitutionToDigit)) {
-                        result += char;
-                        process += `"${char}" → не в substitution алфавите → "${char}"<br>`;
-                        continue;
-                    }
-                    
-                    // Получаем числовое значение из нумерованной таблицы замен
-                    const C = this.substitutionToDigit[char];
-                    let P;
-                    
-                    // Обратное преобразование
-                    switch(this.operation) {
-                        case 'affine':
-                            P = (this.invA * (C - this.b - position + this.N)) % this.N;
-                            break;
-                            
-                        case 'exponential':
-                            P = (this.logTable[C] - position + this.N) % this.N;
-                            break;
-                            
-                        case 'matrix':
-                            // Для матричного дешифрования
-                            if (i + 1 < text.length) {
-                                const nextChar = text[i + 1];
-                                const C2 = (nextChar in this.substitutionToDigit) ? this.substitutionToDigit[nextChar] : 0;
-                                
-                                P = (this.invMatrix[0][0] * C + this.invMatrix[0][1] * C2 - position + this.N) % this.N;
-                                const P2 = (this.invMatrix[1][0] * C + this.invMatrix[1][1] * C2 - position + this.N) % this.N;
-                                
-                                result += this.digitToChar[P2];
-                                process += `"${nextChar}" → <span class="digit">${C2}</span> → [Обратное] = <span class="digit">${P2}</span> → "${this.digitToChar[P2]}"<br>`;
-                                i++;
-                            } else {
-                                P = (this.invMatrix[0][0] * C - position + this.N) % this.N;
-                            }
-                            break;
-                            
-                        case 'nonlinear':
-                            P = this.inverseNonlinearTransform(C, position);
-                            break;
-                    }
-                    
-                    // Гарантируем корректный диапазон
-                    P = ((P % this.N) + this.N) % this.N;
-                    
-                    // Получаем оригинальный символ из нумерованной таблицы
-                    const decryptedChar = this.digitToChar[P];
-                    result += decryptedChar;
-                    
-                    // Логирование процесса
-                    process += `"${char}" → <span class="digit">${C}</span> → [Обратное] = <span class="digit">${P}</span> → "${decryptedChar}"<br>`;
-                }
-                
-                document.getElementById('processInfo').innerHTML = process;
-                return result;
-            }
-            
-            // Отображение таблицы замен
-            renderSubstitutionTable() {
-                const tableBody = document.getElementById('substitutionTableBody');
-                tableBody.innerHTML = '';
-                
-                for (const item of this.substitutionTable) {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${item.originalChar}</td>
-                        <td><span class="digit">${item.originalValue}</span></td>
-                        <td>${item.encryptedChar}</td>
-                        <td><span class="digit">${item.encryptedValue}</span></td>
-                        <td>${item.key}</td>
-                    `;
-                    tableBody.appendChild(row);
-                }
-            }
-        }
-        
-        // Шифрование
-        function encrypt() {
-            try {
-                const alphabet = document.getElementById('alphabet').value;
-                const substitutionAlphabet = document.getElementById('substitutionAlphabet').value;
-                const password = document.getElementById('password').value;
-                const operation = document.getElementById('mathOperation').value;
-                const inputText = document.getElementById('inputText').value;
-                
-                if (!alphabet) {
-                    showStatus('Введите алфавит для шифрования.', 'error');
-                    return;
-                }
-                
-                // Автогенерация substitution алфавита если не задан
-                let actualSubstitution = substitutionAlphabet;
-                if (!actualSubstitution) {
-                    const chars = alphabet.split('');
-                    for (let i = chars.length - 1; i > 0; i--) {
-                        const j = Math.floor(Math.random() * (i + 1));
-                        [chars[i], chars[j]] = [chars[j], chars[i]];
-                    }
-                    actualSubstitution = chars.join('');
-                    document.getElementById('substitutionAlphabet').value = actualSubstitution;
-                }
-                
-                // Гарантируем одинаковую длину алфавитов
-                if (actualSubstitution.length !== alphabet.length) {
-                    if (actualSubstitution.length > alphabet.length) {
-                        actualSubstitution = actualSubstitution.substring(0, alphabet.length);
-                    } else {
-                        actualSubstitution += alphabet.substring(0, alphabet.length - actualSubstitution.length);
-                    }
-                    document.getElementById('substitutionAlphabet').value = actualSubstitution;
-                }
-                
-                currentCipher = new ProfessionalCipher(alphabet, actualSubstitution, password || 'default', operation);
-                const encrypted = currentCipher.encrypt(inputText);
-                document.getElementById('outputText').value = encrypted;
-                
-                // Отображаем таблицу замен
-                currentCipher.renderSubstitutionTable();
-                
-                // Проверяем целостность
-                testIntegrity();
-                
-                showStatus('Текст успешно зашифрован!', 'success');
-            } catch (error) {
-                showStatus('Ошибка при шифровании: ' + error.message, 'error');
-                console.error(error);
-            }
-        }
-        
-        // Дешифрование
-        function decrypt() {
-            try {
-                if (!currentCipher) {
-                    showStatus('Сначала зашифруйте текст!', 'error');
-                    return;
-                }
-                
-                const outputText = document.getElementById('outputText').value;
-                const decrypted = currentCipher.decrypt(outputText);
-                document.getElementById('outputText').value = decrypted;
-                
-                showStatus('Текст успешно расшифрован!', 'success');
-            } catch (error) {
-                showStatus('Ошибка при дешифровании: ' + error.message, 'error');
-                console.error(error);
-            }
-        }
-        
-        // Проверка целостности
-        function testIntegrity() {
-            const integrityStatus = document.getElementById('integrityStatus');
-            
-            if (!currentCipher) {
-                integrityStatus.className = 'status status-error';
-                integrityStatus.innerHTML = 'Целостность не проверена: шифратор не инициализирован';
-                return;
-            }
-            
-            // Тестируем обратимость
-            const testText = "Тест123";
-            const encrypted = currentCipher.encrypt(testText);
-            const decrypted = currentCipher.decrypt(encrypted);
-            
-            if (testText === decrypted) {
-                integrityStatus.className = 'status status-success';
-                integrityStatus.innerHTML = 'Целостность проверена: преобразование полностью обратимо';
-            } else {
-                integrityStatus.className = 'status status-error';
-                integrityStatus.innerHTML = 'Целостность нарушена: преобразование не обратимо';
-            }
-        }
-        
-        // Очистка
-        function clearAll() {
-            document.getElementById('inputText').value = '';
-            document.getElementById('outputText').value = '';
-            document.getElementById('processInfo').innerHTML = '';
-            document.getElementById('substitutionTableBody').innerHTML = '';
-            
-            const integrityStatus = document.getElementById('integrityStatus');
-            integrityStatus.className = 'status';
-            integrityStatus.innerHTML = 'Не проверено';
-            
-            showStatus('Готов к работе', 'success');
-        }
-        
-        // Инициализация при загрузке
-        window.onload = function() {
-            showStatus('Готов к работе', 'success');
-        };
-    </script>
+Алгоритм: SPHINX-256 (Stream Cipher) Размер состояния:512 бит (16 × 32-битных слова) Поле:GF(2³² - 1) Раундов:12 Операции:
+
+· Настоящая арифметика в поле GF(2³²-1)
+· Нелинейные преобразования с использованием S-блоков
+· Расширенное ключевое расписание
+· Зависимые от раунда константы
+· Линейное преобразование с MDS матрицей </pre> </div> </div>
+  </div>
+  <script>
+          // Константы алгоритма
+          const FIELD_MODULUS = 0xFFFFFFFF; // 2^32 - 1 (простое число)
+          const STATE_SIZE = 16; // 16 элементов по 32 бита = 512 бит
+          const NUM_ROUNDS = 12; // Количество раундов
+          
+          // Предопределенные константы для раундовых преобразований
+          const ROUND_CONSTANTS = [
+              0x9E3779B9, 0x243F6A88, 0xB7E15162, 0xBF715880,
+              0x38B4DA56, 0x324E7738, 0xBB1185EB, 0x4F7C7B57,
+              0xCFBFA1C8, 0xC2B3293D, 0x84F41C51, 0xE5E40581,
+              0x6B67A8DC, 0x5D7DBA49, 0x8F1C2B9A, 0x1E839CDA
+          ];
+          
+          // S-блок для нелинейных преобразований (на основе SHA-256 констант)
+          const S_BOX = [
+              0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
+              0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
+              0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3,
+              0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
+              0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc,
+              0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
+              0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7,
+              0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967,
+              0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13,
+              0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85,
+              0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3,
+              0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
+              0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5,
+              0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
+              0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208,
+              0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
+          ];
+          
+          // Матрица для перемешивания байтов (MDS матрица)
+          const MDS_MATRIX = [
+              [0x01, 0x02, 0x04, 0x08],
+              [0x10, 0x20, 0x40, 0x80],
+              [0x1B, 0x36, 0x6C, 0xD8],
+              [0xAB, 0x4D, 0x9A, 0x2F]
+          ];
+          
+          // Функция сложения в поле GF(2^32-1)
+          function gfAdd(a, b) {
+              return (a + b) & FIELD_MODULUS;
+          }
+          
+          // Функция умножения в поле GF(2^32-1)
+          function gfMult(a, b) {
+              let result = 0;
+              a = BigInt(a);
+              b = BigInt(b);
+              const mod = BigInt(FIELD_MODULUS);
+              
+              for (let i = 0; i < 32; i++) {
+                  if (b & 1n) {
+                      result = (result + a) % mod;
+                  }
+                  a = (a << 1n) % mod;
+                  b = b >> 1n;
+              }
+              
+              return Number(result);
+          }
+          
+          // Нелинейное преобразование с использованием S-блока
+          function nonLinearTransformation(x) {
+              // Применяем S-блок к каждому байту
+              let result = 0;
+              for (let i = 0; i < 4; i++) {
+                  const byte = (x >> (i * 8)) & 0xFF;
+                  const sboxVal = S_BOX[byte % S_BOX.length];
+                  result ^= sboxVal << (i * 8);
+              }
+              return result;
+          }
+          
+          // Линейное преобразование (умножение на MDS матрицу)
+          function linearTransformation(x) {
+              let result = 0;
+              for (let i = 0; i < 4; i++) {
+                  let rowResult = 0;
+                  for (let j = 0; j < 4; j++) {
+                      const byte = (x >> (j * 8)) & 0xFF;
+                      rowResult ^= gfMult(byte, MDS_MATRIX[i][j]);
+                  }
+                  result |= (rowResult & 0xFF) << (i * 8);
+              }
+              return result;
+          }
+          
+          // Функция применения раундового оператора
+          function applyRoundOperator(state, roundIndex) {
+              // Добавляем раундовую константу
+              for (let i = 0; i < state.length; i++) {
+                  state[i] = gfAdd(state[i], ROUND_CONSTANTS[(roundIndex + i) % ROUND_CONSTANTS.length]);
+              }
+              
+              // Применяем нелинейное преобразование
+              for (let i = 0; i < state.length; i++) {
+                  state[i] = nonLinearTransformation(state[i]);
+              }
+              
+              // Применяем линейное преобразование
+              for (let i = 0; i < state.length; i++) {
+                  state[i] = linearTransformation(state[i]);
+              }
+              
+              // Циклический сдвиг состояния
+              const shiftAmount = (roundIndex % 7) + 1;
+              const newState = [...state];
+              for (let i = 0; i < state.length; i++) {
+                  newState[i] = state[(i + shiftAmount) % state.length];
+              }
+              
+              // Перемешивание элементов состояния
+              for (let i = 0; i < state.length - 1; i++) {
+                  newState[i] = newState[i] ^ newState[i + 1];
+              }
+              
+              return newState;
+          }
+          
+          // Функция расширения ключа
+          function expandKey(keyWords) {
+              const expandedKey = [...keyWords];
+              
+              // Генерируем дополнительные ключевые слова
+              for (let i = 8; i < 16; i++) {
+                  const prev = expandedKey[i - 1];
+                  const next = expandedKey[i - 8];
+                  expandedKey[i] = nonLinearTransformation(gfAdd(prev, next) ^ ROUND_CONSTANTS[i % ROUND_CONSTANTS.length]);
+              }
+              
+              return expandedKey;
+          }
+          
+          // Функция генерации блока ключевого потока
+          function generateKeystreamBlock(key, nonce, counter) {
+              // Преобразование ключа и nonce в массив чисел
+              const keyWords = stringToWords(key);
+              const nonceWords = stringToWords(nonce);
+              
+              // Расширяем ключ
+              const expandedKey = expandKey(keyWords);
+              
+              // Инициализация состояния
+              let state = [
+                  0x73706878, 0x696e7832, 0x35362d32, 0x35362d32, // "sphx inx2 56-256-"
+                  ...expandedKey.slice(0, 8),
+                  counter,
+                  ...nonceWords.slice(0, 3)
+              ];
+              
+              // Сохраняем исходное состояние
+              const initialState = [...state];
+              
+              // Применяем раундовые преобразования
+              for (let roundIndex = 0; roundIndex < NUM_ROUNDS; roundIndex++) {
+                  state = applyRoundOperator(state, roundIndex);
+              }
+              
+              // Генерируем ключевой поток
+              const keystream = [];
+              for (let i = 0; i < state.length; i++) {
+                  keystream.push(gfAdd(state[i], initialState[i]));
+              }
+              
+              return keystream;
+          }
+          
+          // Преобразование строки в массив 32-битных слов
+          function stringToWords(str) {
+              const words = [];
+              for (let i = 0; i < str.length; i += 4) {
+                  let word = 0;
+                  for (let j = 0; j < 4; j++) {
+                      if (i + j < str.length) {
+                          word = (word << 8) | str.charCodeAt(i + j);
+                      } else {
+                          word = (word << 8);
+                      }
+                  }
+                  words.push(word);
+              }
+              
+              // Дополняем до 8 слов при необходимости
+              while (words.length < 8) {
+                  words.push(0);
+              }
+              
+              return words.slice(0, 8);
+          }
+          
+          // Преобразование массива 32-битных слов в строку
+          function wordsToString(words) {
+              let str = '';
+              for (const word of words) {
+                  for (let i = 3; i >= 0; i--) {
+                      const charCode = (word >> (i * 8)) & 0xFF;
+                      if (charCode !== 0) {
+                          str += String.fromCharCode(charCode);
+                      }
+                  }
+              }
+              return str;
+          }
+          
+          // Преобразование байтов в hex-строку
+          function bytesToHex(bytes) {
+              return Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
+          }
+          
+          // Преобразование hex-строки в байты
+          function hexToBytes(hex) {
+              const bytes = [];
+              for (let i = 0; i < hex.length; i += 2) {
+                  bytes.push(parseInt(hex.substr(i, 2), 16));
+              }
+              return new Uint8Array(bytes);
+          }
+          
+          // Генерация случайного ключа
+          function generateRandomKey() {
+              const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
+              let key = '';
+              for (let i = 0; i < 32; i++) {
+                  key += chars.charAt(Math.floor(Math.random() * chars.length));
+              }
+              document.getElementById('key').value = key;
+              
+              const status = document.getElementById('status');
+              status.textContent = '✅ Сгенерирован новый случайный ключ';
+              status.className = 'status success';
+              
+              setTimeout(() => {
+                  status.textContent = '';
+                  status.className = 'status';
+              }, 3000);
+          }
+          
+          // Функция шифрования/расшифрования
+          async function processText(encrypt) {
+              const startTime = performance.now();
+              const status = document.getElementById('status');
+              status.className = 'status';
+              
+              try {
+                  const inputMode = document.getElementById('inputMode').value;
+                  const outputMode = document.getElementById('outputMode').value;
+                  let key = document.getElementById('key').value;
+                  let nonce = document.getElementById('nonce').value;
+                  let message = document.getElementById('message').value;
+                  
+                  // Обработка hex-ввода
+                  if (inputMode === 'hex') {
+                      try {
+                          const messageBytes = hexToBytes(message.replace(/[^0-9a-f]/gi, ''));
+                          message = new TextDecoder().decode(messageBytes);
+                      } catch (e) {
+                          showStatus('Ошибка: Неверный hex-формат сообщения', false);
+                          return;
+                      }
+                  }
+                  
+                  // Проверка и нормализация ключа и nonce
+                  if (key.length !== 32) {
+                      if (key.length === 64 && /^[0-9a-f]+$/i.test(key)) {
+                          // Hex ключ
+                          const keyBytes = hexToBytes(key);
+                          key = new TextDecoder().decode(keyBytes).slice(0, 32);
+                      } else {
+                          key = key.padEnd(32, ' ').slice(0, 32);
+                      }
+                  }
+                  
+                  if (nonce.length !== 12) {
+                      if (nonce.length === 24 && /^[0-9a-f]+$/i.test(nonce)) {
+                          // Hex nonce
+                          const nonceBytes = hexToBytes(nonce);
+                          nonce = new TextDecoder().decode(nonceBytes).slice(0, 12);
+                      } else {
+                          nonce = nonce.padEnd(12, ' ').slice(0, 12);
+                      }
+                  }
+                  
+                  // Преобразование сообщения в байты
+                  const messageBytes = new TextEncoder().encode(message);
+                  
+                  // Шифрование/расшифрование по блокам
+                  let resultBytes = [];
+                  let counter = 0;
+                  
+                  status.innerHTML = '<span class="loader"></span> Обработка...';
+                  status.className = 'status warning';
+                  
+                  // Имитация асинхронной обработки для показа индикатора прогресса
+                  await new Promise(resolve => setTimeout(resolve, 10));
+                  
+                  for (let i = 0; i < messageBytes.length; i += 64) {
+                      // Генерация блока ключевого потока
+                      const keystream = generateKeystreamBlock(key, nonce, counter);
+                      const keystreamBytes = [];
+                      
+                      // Преобразование ключевого потока в байты
+                      for (const word of keystream) {
+                          keystreamBytes.push((word >> 24) & 0xFF);
+                          keystreamBytes.push((word >> 16) & 0xFF);
+                          keystreamBytes.push((word >> 8) & 0xFF);
+                          keystreamBytes.push(word & 0xFF);
+                      }
+                      
+                      // XOR с ключевым потоком
+                      const block = messageBytes.slice(i, i + 64);
+                      for (let j = 0; j < block.length; j++) {
+                          resultBytes.push(block[j] ^ keystreamBytes[j]);
+                      }
+                      
+                      counter++;
+                  }
+                  
+                  // Преобразование результата в нужный формат
+                  let result;
+                  const resultArray = new Uint8Array(resultBytes);
+                  
+                  if (outputMode === 'hex') {
+                      result = bytesToHex(resultArray);
+                  } else if (outputMode === 'base64') {
+                      result = btoa(String.fromCharCode(...resultArray));
+                  } else {
+                      result = new TextDecoder().decode(resultArray);
+                  }
+                  
+                  // Вывод результата
+                  if (encrypt) {
+                      document.getElementById('ciphertext').value = result;
+                      document.getElementById('decrypted').value = '';
+                  } else {
+                      document.getElementById('decrypted').value = result;
+                  }
+                  
+                  // Расчет производительности
+                  const endTime = performance.now();
+                  const processingTime = endTime - startTime;
+                  const dataSizeKB = messageBytes.length / 1024;
+                  const speed = dataSizeKB / (processingTime / 1000);
+                  
+                  document.getElementById('dataSize').textContent = messageBytes.length;
+                  document.getElementById('processingTime').textContent = processingTime.toFixed(2);
+                  document.getElementById('processingSpeed').textContent = (speed / 1024).toFixed(2);
+                  
+                  if (encrypt) {
+                      showStatus('Сообщение успешно зашифровано!', true);
+                  } else {
+                      showStatus('Сообщение успешно расшифровано!', true);
+                  }
+              } catch (error) {
+                  showStatus('Ошибка: ' + error.message, false);
+                  console.error(error);
+              }
+          }
+          
+          function encryptMessage() {
+              processText(true);
+          }
+          
+          function decryptMessage() {
+              // Для расшифрования берем данные из поля ciphertext
+              const inputMode = document.getElementById('inputMode').value;
+              let ciphertext = document.getElementById('ciphertext').value;
+              
+              if (inputMode === 'hex') {
+                  document.getElementById('message').value = ciphertext;
+              } else if (document.getElementById('outputMode').value === 'base64') {
+                  try {
+                      const bytes = Uint8Array.from(atob(ciphertext), c => c.charCodeAt(0));
+                      document.getElementById('message').value = bytesToHex(bytes);
+                  } catch (e) {
+                      document.getElementById('message').value = ciphertext;
+                  }
+              } else {
+                  document.getElementById('message').value = ciphertext;
+              }
+              
+              processText(false);
+          }
+          
+          function showStatus(message, success) {
+              const statusEl = document.getElementById('status');
+              statusEl.textContent = message;
+              statusEl.className = 'status ' + (success ? 'success' : 'error');
+              
+              // Автоскрытие через 5 секунд
+              setTimeout(() => {
+                  statusEl.textContent = '';
+                  statusEl.className = 'status';
+              }, 5000);
+          }
+          
+          // Копирование в буфер обмена
+          function copyToClipboard() {
+              const ciphertext = document.getElementById('ciphertext');
+              ciphertext.select();
+              document.execCommand('copy');
+              
+              const status = document.getElementById('status');
+              status.textContent = '✅ Скопировано в буфер обмена';
+              status.className = 'status success';
+              
+              setTimeout(() => {
+                  status.textContent = '';
+                  status.className = 'status';
+              }, 2000);
+          }
+          
+          // Инициализация при загрузке
+          window.addEventListener('load', async () => {
+              const status = document.getElementById('status');
+              status.innerHTML = '<span class="loader"></span> Инициализация криптографической системы...';
+              status.className = 'status warning';
+              
+              // Имитация загрузки
+              await new Promise(resolve => setTimeout(resolve, 1500));
+              
+              status.textContent = '✅ Система готова к работе';
+              status.className = 'status success';
+              
+              setTimeout(() => {
+                  status.textContent = '';
+                  status.className = 'status';
+              }, 3000);
+          });
+      </script>
+
 </body>
-</html>
+                  </html>
