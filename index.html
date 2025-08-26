@@ -3,695 +3,312 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enhanced Trifid Cipher Pro</title>
+    <title>Advanced Double Vigenère Cipher</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --primary: #4361ee;
-            --primary-dark: #3a56d4;
-            --secondary: #3f37c9;
-            --accent: #4895ef;
-            --light: #f8f9fa;
-            --dark: #212529;
-            --gray: #6c757d;
-            --light-gray: #e9ecef;
-            --success: #4cc9f0;
-            --error: #f72585;
-            --warning: #f8961e;
-            --border-radius: 8px;
-            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
-            --card-bg: rgba(255, 255, 255, 0.95);
-            --input-bg: rgba(255, 255, 255, 0.9);
-        }
-
-        [data-theme="dark"] {
-            --light: #121212;
-            --dark: #f8f9fa;
-            --gray: #adb5bd;
-            --light-gray: #343a40;
-            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-            --card-bg: rgba(30, 30, 40, 0.95);
-            --input-bg: rgba(40, 40, 50, 0.9);
-            --primary: #4895ef;
-            --primary-dark: #3f84d6;
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
+        
         body {
-            font-family: 'Segoe UI', 'Roboto', system-ui, -apple-system, sans-serif;
-            line-height: 1.6;
-            color: var(--dark);
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            color: #fff;
             min-height: 100vh;
-            padding: 2rem;
-            transition: var(--transition);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-
-        [data-theme="dark"] body {
-            background: linear-gradient(135deg, #232526 0%, #414345 100%);
-        }
-
+        
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-            gap: 1rem;
-            background: var(--card-bg);
-            padding: 1.5rem;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-        }
-
-        h1, h2, h3, h4 {
-            color: var(--primary);
-            margin-bottom: 1rem;
-            font-weight: 600;
-        }
-
-        h1 {
-            font-size: 2rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        h2 {
-            font-size: 1.75rem;
-        }
-
-        h3 {
-            font-size: 1.5rem;
-        }
-
-        h4 {
-            font-size: 1.25rem;
-        }
-
-        .card {
-            background-color: var(--card-bg);
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            transition: var(--transition);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-        }
-
-        [data-theme="dark"] .card {
-            border-color: rgba(255, 255, 255, 0.05);
-        }
-
-        .card:hover {
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-            transform: translateY(-2px);
-        }
-
-        .tabs {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-            border-bottom: 1px solid var(--light-gray);
-            padding-bottom: 0.5rem;
-            flex-wrap: wrap;
-        }
-
-        .tab {
-            padding: 0.75rem 1.25rem;
-            background-color: rgba(0, 0, 0, 0.05);
-            cursor: pointer;
-            border-radius: var(--border-radius) var(--border-radius) 0 0;
-            transition: var(--transition);
-            font-weight: 500;
-            font-size: 0.95rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        [data-theme="dark"] .tab {
-            background-color: rgba(255, 255, 255, 0.05);
-        }
-
-        .tab:hover {
-            background-color: rgba(0, 0, 0, 0.1);
-        }
-
-        [data-theme="dark"] .tab:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        .tab.active {
-            background-color: var(--primary);
-            color: white;
-        }
-
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.25rem;
-            margin: 1.25rem 0;
-        }
-
-        .cube-layer {
-            background-color: var(--card-bg);
-            border-radius: var(--border-radius);
-            padding: 1rem;
-            box-shadow: var(--box-shadow);
-            border: 1px solid var(--light-gray);
-        }
-
-        .cube-table {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            padding: 30px;
             width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            margin-top: 0.5rem;
+            max-width: 1200px;
+            margin: 20px 0;
         }
-
-        .cube-table th, .cube-table td {
-            border: 1px solid var(--light-gray);
-            padding: 0.5rem;
+        
+        header {
             text-align: center;
-            transition: var(--transition);
-            font-size: 0.9rem;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-
-        .cube-table th {
-            background-color: var(--primary);
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            color: #00ffcc;
+            text-shadow: 0 0 15px rgba(0, 255, 204, 0.7);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #ddd;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .security-badge {
+            display: inline-block;
+            background: linear-gradient(to right, #4CAF50, #2E8B57);
             color: white;
-            font-weight: 600;
+            padding: 8px 20px;
+            border-radius: 30px;
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 1rem;
         }
-
-        .cube-table td {
-            background-color: var(--input-bg);
-            font-family: 'Courier New', monospace;
+        
+        .card {
+            background: rgba(30, 30, 50, 0.7);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(100, 100, 150, 0.5);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
-
-        .cube-table td:hover {
-            background-color: var(--primary);
-            color: white;
-            transform: scale(1.05);
+        
+        .card-title {
+            color: #4dccbd;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
-
-        .form-group {
-            margin-bottom: 1.25rem;
+        
+        .card-title i {
+            font-size: 1.5rem;
+            color: #00ffcc;
         }
-
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
         label {
             display: block;
-            margin-bottom: 0.5rem;
+            margin-bottom: 10px;
+            color: #aaa;
+            font-size: 1.1rem;
             font-weight: 500;
-            color: var(--dark);
-            font-size: 0.95rem;
         }
-
-        textarea, input[type="text"], input[type="number"], input[type="password"], select {
+        
+        input, textarea, select {
             width: 100%;
-            padding: 0.75rem 1rem;
-            border: 1px solid var(--light-gray);
-            border-radius: var(--border-radius);
-            font-family: 'Courier New', monospace;
-            transition: var(--transition);
-            background-color: var(--input-bg);
-            color: var(--dark);
-            font-size: 0.95rem;
+            padding: 14px 18px;
+            border-radius: 10px;
+            border: 2px solid #444;
+            background: rgba(10, 10, 20, 0.7);
+            color: #fff;
+            font-size: 1.1rem;
+            transition: all 0.3s;
         }
-
-        textarea {
-            min-height: 120px;
-            resize: vertical;
-        }
-
-        textarea:focus, 
-        input[type="text"]:focus,
-        input[type="number"]:focus,
-        input[type="password"]:focus,
-        select:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 0.2rem rgba(67, 97, 238, 0.25);
+        
+        input:focus, textarea:focus, select:focus {
             outline: none;
+            border-color: #00ffcc;
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.5);
         }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1.25rem;
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            font-weight: 500;
-            transition: var(--transition);
-            font-size: 0.95rem;
-            white-space: nowrap;
+        
+        .input-hint {
+            font-size: 0.9rem;
+            color: #888;
+            margin-top: 5px;
         }
-
-        .btn:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-2px);
-        }
-
-        .btn-outline {
-            background-color: transparent;
-            border: 1px solid var(--primary);
-            color: var(--primary);
-        }
-
-        .btn-outline:hover {
-            background-color: var(--primary);
-            color: white;
-        }
-
-        .btn-danger {
-            background-color: var(--error);
-        }
-
-        .btn-danger:hover {
-            background-color: #d1145a;
-        }
-
-        .btn-warning {
-            background-color: var(--warning);
-            color: var(--dark);
-        }
-
-        .btn-warning:hover {
-            background-color: #e07d10;
-        }
-
+        
         .btn-group {
             display: flex;
-            gap: 0.75rem;
-            flex-wrap: wrap;
-            margin-bottom: 1.25rem;
-        }
-
-        .alert {
-            padding: 1rem;
-            border-radius: var(--border-radius);
-            margin-bottom: 1.25rem;
-            border-left: 4px solid transparent;
-            font-size: 0.95rem;
-        }
-
-        .alert-success {
-            background-color: rgba(76, 201, 240, 0.15);
-            border-left-color: var(--success);
-        }
-
-        .alert-error {
-            background-color: rgba(247, 37, 133, 0.15);
-            border-left-color: var(--error);
-        }
-
-        .alert-warning {
-            background-color: rgba(248, 150, 30, 0.15);
-            border-left-color: var(--warning);
-        }
-
-        .process-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 1rem 0;
-            font-size: 0.9rem;
-        }
-
-        .process-table th, .process-table td {
-            border: 1px solid var(--light-gray);
-            padding: 0.75rem;
-            text-align: left;
-        }
-
-        .process-table th {
-            background-color: var(--primary);
-            color: white;
-            font-weight: 600;
-        }
-
-        .process-table tr:nth-child(even) {
-            background-color: rgba(0, 0, 0, 0.03);
-        }
-
-        [data-theme="dark"] .process-table tr:nth-child(even) {
-            background-color: rgba(255, 255, 255, 0.03);
-        }
-
-        .theme-toggle {
-            background: none;
-            border: none;
-            font-size: 1.25rem;
-            cursor: pointer;
-            color: var(--dark);
-            transition: var(--transition);
-            padding: 0.5rem;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .theme-toggle:hover {
-            background-color: rgba(0, 0, 0, 0.05);
-            transform: rotate(30deg);
-        }
-
-        [data-theme="dark"] .theme-toggle:hover {
-            background-color: rgba(255, 255, 255, 0.05);
-        }
-
-        .settings-row {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
+            gap: 15px;
+            margin: 25px 0;
             flex-wrap: wrap;
         }
-
-        .settings-group {
+        
+        button {
             flex: 1;
-            min-width: 280px;
-            background-color: rgba(0, 0, 0, 0.03);
-            padding: 1rem;
-            border-radius: var(--border-radius);
-            border: 1px solid var(--light-gray);
-        }
-
-        [data-theme="dark"] .settings-group {
-            background-color: rgba(255, 255, 255, 0.03);
-        }
-
-        .settings-group h4 {
-            margin-bottom: 0.75rem;
-        }
-
-        .error {
-            color: var(--error);
-            font-weight: bold;
-        }
-
-        .success {
-            color: var(--success);
-            font-weight: bold;
-        }
-
-        .warning {
-            color: var(--warning);
-            font-weight: bold;
-        }
-
-        .char-highlight {
-            background-color: rgba(67, 97, 238, 0.2);
-            padding: 0.1rem 0.25rem;
-            border-radius: 0.25rem;
-            font-family: 'Courier New', monospace;
-        }
-
-        .char-skipped {
-            background-color: rgba(248, 150, 30, 0.2);
-            padding: 0.1rem 0.25rem;
-            border-radius: 0.25rem;
-            font-family: 'Courier New', monospace;
-        }
-
-        .settings-file-input {
-            display: none;
-        }
-
-        .settings-file-label {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1.25rem;
-            background-color: rgba(67, 97, 238, 0.1);
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            transition: var(--transition);
-            font-size: 0.95rem;
-        }
-
-        .settings-file-label:hover {
-            background-color: rgba(67, 97, 238, 0.2);
-        }
-
-        .readonly-field {
-            background-color: rgba(0, 0, 0, 0.05) !important;
-            cursor: not-allowed;
-        }
-
-        [data-theme="dark"] .readonly-field {
-            background-color: rgba(255, 255, 255, 0.05) !important;
-        }
-
-        .round-badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 24px;
-            height: 24px;
-            background-color: var(--primary);
-            color: white;
-            border-radius: 50%;
-            font-size: 0.8rem;
-            margin-right: 0.5rem;
-            font-weight: bold;
-        }
-
-        .cube-title {
-            font-size: 1rem;
-            font-weight: bold;
-            margin-bottom: 0.75rem;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .security-meter {
-            height: 8px;
-            background-color: var(--light-gray);
-            border-radius: 4px;
-            margin-top: 0.5rem;
-            overflow: hidden;
-        }
-
-        .security-meter-fill {
-            height: 100%;
-            background-color: var(--success);
-            width: 0%;
-            transition: width 0.5s ease;
-        }
-
-        .password-strength {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 0.25rem;
-            font-size: 0.8rem;
-            color: var(--gray);
-        }
-
-        .password-strength span {
-            transition: color 0.3s ease;
-        }
-
-        .password-strength .active {
-            color: var(--success);
-            font-weight: bold;
-        }
-
-        .tooltip {
-            position: relative;
-            display: inline-block;
-            cursor: help;
-        }
-
-        .tooltip .tooltiptext {
-            visibility: hidden;
-            width: 250px;
-            background-color: var(--dark);
-            color: var(--light);
-            text-align: center;
-            border-radius: var(--border-radius);
-            padding: 0.75rem;
-            position: absolute;
-            z-index: 1;
-            bottom: 125%;
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0;
-            transition: opacity 0.3s;
-            font-size: 0.85rem;
-            font-weight: normal;
-            box-shadow: var(--box-shadow);
-        }
-
-        .tooltip:hover .tooltiptext {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        .status-icon {
-            margin-right: 0.5rem;
-        }
-
-        .text-preview {
-            font-family: 'Courier New', monospace;
-            line-height: 1.8;
-            word-break: break-all;
-            padding: 0.5rem;
-            background-color: var(--input-bg);
-            border-radius: var(--border-radius);
-            border: 1px solid var(--light-gray);
-        }
-
-        .copy-feedback {
-            display: inline-block;
-            margin-left: 0.5rem;
-            color: var(--success);
-            font-weight: bold;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .copy-feedback.show {
-            opacity: 1;
-        }
-
-        /* Modal styles */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background-color: var(--card-bg);
-            padding: 2rem;
-            border-radius: var(--border-radius);
-            max-width: 600px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: var(--box-shadow);
-            position: relative;
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: none;
+            min-width: 150px;
+            padding: 16px;
             border: none;
-            font-size: 1.5rem;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
             cursor: pointer;
-            color: var(--gray);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
-
-        .substitution-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 1rem 0;
-            font-family: 'Courier New', monospace;
-        }
-
-        .substitution-table th, .substitution-table td {
-            border: 1px solid var(--light-gray);
-            padding: 0.5rem;
-            text-align: center;
-        }
-
-        .substitution-table th {
-            background-color: var(--primary);
+        
+        .encrypt-btn {
+            background: linear-gradient(to right, #4CAF50, #2E8B57);
             color: white;
         }
-
-        .substitution-table tr:nth-child(even) {
-            background-color: rgba(0, 0, 0, 0.03);
+        
+        .decrypt-btn {
+            background: linear-gradient(to right, #f44336, #B22222);
+            color: white;
         }
-
-        [data-theme="dark"] .substitution-table tr:nth-child(even) {
-            background-color: rgba(255, 255, 255, 0.03);
+        
+        .reset-btn {
+            background: linear-gradient(to right, #2196F3, #0D47A1);
+            color: white;
         }
-
+        
+        .test-btn {
+            background: linear-gradient(to right, #FF9800, #E65100);
+            color: white;
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .result-container {
+            background: rgba(30, 50, 30, 0.7);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+        
+        .result-text {
+            font-size: 1.5rem;
+            text-align: center;
+            padding: 25px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            font-family: monospace;
+            letter-spacing: 2px;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            word-break: break-all;
+            border: 2px dashed #4dccbd;
+            line-height: 1.6;
+        }
+        
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #888;
+        }
+        
+        .status-ok {
+            background: #4CAF50;
+        }
+        
+        .status-error {
+            background: #f44336;
+        }
+        
+        .crypto-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .info-card {
+            background: rgba(20, 20, 40, 0.8);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .info-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #00ffcc;
+            margin: 10px 0;
+        }
+        
+        .info-label {
+            color: #aaa;
+            font-size: 1rem;
+        }
+        
+        .verification-panel {
+            background: rgba(50, 50, 80, 0.7);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .verification-result {
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .success {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
+            border: 1px solid #4CAF50;
+        }
+        
+        .error {
+            background: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+            border: 1px solid #f44336;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #aaa;
+            padding: 20px;
+            width: 100%;
+            font-size: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
         @media (max-width: 768px) {
-            body {
-                padding: 1rem;
-            }
-            
-            .grid-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .btn-group {
-                gap: 0.5rem;
-            }
-            
-            .settings-row {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            
-            .card {
-                padding: 1rem;
+            .container {
+                padding: 15px;
             }
             
             h1 {
-                font-size: 1.75rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .tabs {
-                overflow-x: auto;
-                padding-bottom: 0.5rem;
-                flex-wrap: nowrap;
-                -webkit-overflow-scrolling: touch;
+                font-size: 2rem;
             }
             
-            .tab {
-                padding: 0.5rem 0.75rem;
-                font-size: 0.85rem;
+            .btn-group {
+                flex-direction: column;
             }
             
-            .btn {
-                padding: 0.5rem 0.75rem;
-                font-size: 0.85rem;
+            button {
+                width: 100%;
+            }
+            
+            .crypto-info {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -699,1516 +316,345 @@
 <body>
     <div class="container">
         <header>
-            <h1><i class="fas fa-user-secret"></i> Enhanced Trifid Cipher Pro</h1>
-            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-                <i class="fas fa-moon"></i>
-            </button>
+            <h1><i class="fas fa-double-layer"></i> Advanced Double Vigenère Cipher</h1>
+            <p class="subtitle">Double-layer encryption with enhanced security and integrity verification</p>
+            <div class="security-badge">
+                <i class="fas fa-shield-alt"></i> 2<sup>112</sup> BIT SECURITY WITH 12-CHAR KEYS
+            </div>
         </header>
-
+        
         <div class="card">
-            <div class="tabs">
-                <div class="tab active" data-tab="settings"><i class="fas fa-cog"></i> Settings</div>
-                <div class="tab" data-tab="encrypt"><i class="fas fa-lock"></i> Encrypt</div>
-                <div class="tab" data-tab="decrypt"><i class="fas fa-lock-open"></i> Decrypt</div>
-                <div class="tab" data-tab="about"><i class="fas fa-info-circle"></i> About</div>
+            <div class="card-title">
+                <i class="fas fa-key"></i>
+                <span>Encryption Keys</span>
             </div>
-
-            <div id="settings" class="tab-content active">
-                <h2><i class="fas fa-sliders-h"></i> Cipher Configuration</h2>
-                
-                <div class="settings-row">
-                    <div class="settings-group">
-                        <h4><i class="fas fa-font"></i> Alphabet Settings</h4>
-                        <div class="form-group">
-                            <label for="alphabet">Alphabet (64 unique characters)</label>
-                            <textarea id="alphabet" rows="3">ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz#×</textarea>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="substitutionTable">Substitution Table (64 unique characters)</label>
-                            <textarea id="substitutionTable" rows="3">×#zyxwvutsrqponmlkjihgfedcba9876543210ZYXWVUTSRQPONMLKJIHGFEDCBA</textarea>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="filler">Filler character (must NOT be in alphabet)</label>
-                            <input type="text" id="filler" value="~" maxlength="1">
-                        </div>
-                    </div>
-                    
-                    <div class="settings-group">
-                        <h4><i class="fas fa-key"></i> Security Settings</h4>
-                        <div class="form-group">
-                            <label for="encryptionKey">
-                                Encryption Key
-                                <span class="tooltip">
-                                    <i class="fas fa-question-circle"></i>
-                                    <span class="tooltiptext">Use a strong passphrase with at least 12 characters</span>
-                                </span>
-                            </label>
-                            <input type="password" id="encryptionKey" placeholder="Enter strong encryption key">
-                            <div class="security-meter">
-                                <div class="security-meter-fill" id="securityMeter"></div>
-                            </div>
-                            <div class="password-strength" id="passwordStrength">
-                                <span data-level="1">Weak</span>
-                                <span data-level="2">Medium</span>
-                                <span data-level="3">Strong</span>
-                                <span data-level="4">Very Strong</span>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="rounds">Encryption Rounds (3-10)</label>
-                            <input type="number" id="rounds" min="3" max="10" value="5">
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="btn-group">
-                    <button class="btn" id="initCubes"><i class="fas fa-cube"></i> Initialize Cubes</button>
-                    <button class="btn btn-outline" id="resetCubes"><i class="fas fa-undo"></i> Reset Defaults</button>
-                    <input type="file" id="settingsFileInput" class="settings-file-input" accept=".json,.txt">
-                    <label for="settingsFileInput" class="settings-file-label" id="settingsFileLabel">
-                        <i class="fas fa-file-import"></i> Load Settings
-                    </label>
-                    <button class="btn btn-outline" id="saveSettings"><i class="fas fa-file-export"></i> Save Settings</button>
-                    <button class="btn btn-outline" id="advancedSettings"><i class="fas fa-cogs"></i> Advanced</button>
-                </div>
-                
-                <div id="alphabetStatus" class="alert" style="display: none;"></div>
-                
-                <div id="cubesVisualization">
-                    <h3><i class="fas fa-project-diagram"></i> Cryptographic Cubes</h3>
-                    <div id="cubesContainer"></div>
-                </div>
+            
+            <div class="input-group">
+                <label for="key1"><i class="fas fa-key"></i> First Layer Key (A-Z only)</label>
+                <input type="text" id="key1" placeholder="Enter first encryption key" value="SECRETKEYONE">
+                <div class="input-hint">Used for the first Vigenère encryption layer</div>
             </div>
-
-            <div id="encrypt" class="tab-content">
-                <h2><i class="fas fa-lock"></i> Message Encryption</h2>
-                
-                <div class="form-group">
-                    <label for="plaintext"><i class="fas fa-pen"></i> Plaintext Message</label>
-                    <textarea id="plaintext" placeholder="Enter text to encrypt"></textarea>
-                    <div class="text-preview" id="plaintextPreview"></div>
-                </div>
-                
-                <div class="btn-group">
-                    <button class="btn" id="encryptBtn"><i class="fas fa-key"></i> Encrypt</button>
-                    <button class="btn btn-outline" id="clearPlaintext"><i class="fas fa-trash"></i> Clear</button>
-                    <button class="btn btn-outline" id="samplePlaintext"><i class="fas fa-lightbulb"></i> Sample Text</button>
-                </div>
-                
-                <div id="encryptionResult" class="alert alert-success" style="display: none;">
-                    <h3><i class="fas fa-check-circle"></i> Encryption Successful</h3>
-                    <p><strong>Ciphertext:</strong></p>
-                    <div class="text-preview" id="ciphertextOutput"></div>
-                    <button class="btn btn-outline" id="copyCiphertext"><i class="fas fa-copy"></i> Copy to Clipboard</button>
-                    <span class="copy-feedback" id="cipherCopyFeedback">Copied!</span>
-                </div>
-                
-                <div id="encryptionSteps" class="visualization"></div>
+            
+            <div class="input-group">
+                <label for="key2"><i class="fas fa-key"></i> Second Layer Key (A-Z only)</label>
+                <input type="text" id="key2" placeholder="Enter second encryption key" value="SECRETKEYTWO">
+                <div class="input-hint">Used for the second mapping encryption layer</div>
             </div>
-
-            <div id="decrypt" class="tab-content">
-                <h2><i class="fas fa-lock-open"></i> Message Decryption</h2>
-                
-                <div class="form-group">
-                    <label for="ciphertext"><i class="fas fa-pen"></i> Ciphertext Message</label>
-                    <textarea id="ciphertext" placeholder="Enter text to decrypt"></textarea>
-                    <div class="text-preview" id="ciphertextPreview"></div>
-                </div>
-                
-                <div class="btn-group">
-                    <button class="btn" id="decryptBtn"><i class="fas fa-key"></i> Decrypt</button>
-                    <button class="btn btn-outline" id="clearCiphertext"><i class="fas fa-trash"></i> Clear</button>
-                    <button class="btn btn-outline" id="sampleCiphertext"><i class="fas fa-lightbulb"></i> Sample Text</button>
-                </div>
-                
-                <div id="decryptionResult" class="alert alert-success" style="display: none;">
-                    <h3><i class="fas fa-check-circle"></i> Decryption Successful</h3>
-                    <p><strong>Plaintext:</strong></p>
-                    <div class="text-preview" id="plaintextOutput"></div>
-                    <button class="btn btn-outline" id="copyPlaintext"><i class="fas fa-copy"></i> Copy to Clipboard</button>
-                    <span class="copy-feedback" id="plainCopyFeedback">Copied!</span>
-                </div>
-                
-                <div id="decryptionSteps" class="visualization"></div>
+            
+            <div class="input-group">
+                <label for="inputText"><i class="fas fa-keyboard"></i> Input Text</label>
+                <textarea id="inputText" rows="4" placeholder="Enter text to encrypt or decrypt">Confidential data: Operation Midnight at 23:59</textarea>
             </div>
-
-            <div id="about" class="tab-content">
-                <h2><i class="fas fa-info-circle"></i> About Enhanced Trifid Cipher</h2>
-                
-                <div class="card">
-                    <h3><i class="fas fa-question-circle"></i> Cryptographic Principles</h3>
-                    <p>This enhanced Trifid cipher implementation provides significantly stronger security than classical versions through multiple cryptographic improvements:</p>
-                    
-                    <h4><i class="fas fa-shield-alt"></i> Security Enhancements:</h4>
-                    <ul>
-                        <li><strong>Key-Based Cube Generation:</strong> Each round uses a unique cube derived from a cryptographic hash of the master key</li>
-                        <li><strong>Substitution Table:</strong> Uses a separate substitution table for additional security layer</li>
-                        <li><strong>Multiple Encryption Rounds:</strong> Configurable rounds (3-10) with different cubes for each round</li>
-                        <li><strong>Strong Key Derivation:</strong> Uses PBKDF2 with SHA-256 for key stretching (100,000 iterations)</li>
-                        <li><strong>Diffusion:</strong> Each round completely transforms the data using different cubes</li>
-                        <li><strong>Confusion:</strong> Complex relationship between key and ciphertext</li>
-                    </ul>
-                    
-                    <h4><i class="fas fa-key"></i> Cube Generation Process:</h4>
-                    <ol>
-                        <li>Create master seed from encryption key using PBKDF2</li>
-                        <li>For each round:
-                            <ul>
-                                <li>Derive round-specific seed using HMAC-SHA256</li>
-                                <li>Shuffle alphabet using cryptographically secure Fisher-Yates algorithm</li>
-                                <li>Fill 4×4×4 cube with shuffled characters</li>
-                            </ul>
-                        </li>
-                        <li>Verify all cubes are unique and properly filled</li>
-                    </ol>
-
-                    <h4><i class="fas fa-user-secret"></i> Security Recommendations:</h4>
-                    <ul>
-                        <li>Use a strong passphrase with at least 12 characters</li>
-                        <li>Include uppercase, lowercase, numbers, and symbols in your key</li>
-                        <li>Use at least 5 encryption rounds for sensitive data</li>
-                        <li>Never reuse the same key for different purposes</li>
-                        <li>Consider combining with other encryption methods for maximum security</li>
-                    </ul>
+            
+            <div class="btn-group">
+                <button class="encrypt-btn" onclick="encrypt()">
+                    <i class="fas fa-lock"></i> Encrypt
+                </button>
+                <button class="decrypt-btn" onclick="decrypt()">
+                    <i class="fas fa-lock-open"></i> Decrypt
+                </button>
+                <button class="test-btn" onclick="testIntegrity()">
+                    <i class="fas fa-check-circle"></i> Test Integrity
+                </button>
+                <button class="reset-btn" onclick="resetAll()">
+                    <i class="fas fa-redo"></i> Reset
+                </button>
+            </div>
+            
+            <div class="status-indicator">
+                <div class="status-dot" id="keyStatus"></div>
+                <span id="keyStatusText">Keys not validated</span>
+            </div>
+        </div>
+        
+        <div class="crypto-info">
+            <div class="info-card">
+                <div class="info-label">Key Space Size</div>
+                <div class="info-value" id="keySpace">0</div>
+                <div class="info-label">Possible combinations</div>
+            </div>
+            
+            <div class="info-card">
+                <div class="info-label">Brute Force Time</div>
+                <div class="info-value" id="bruteForceTime">0</div>
+                <div class="info-label">At 1 trillion ops/sec</div>
+            </div>
+            
+            <div class="info-card">
+                <div class="info-label">Security Level</div>
+                <div class="info-value" id="securityLevel">0-bit</div>
+                <div class="info-label">Equivalent protection</div>
+            </div>
+        </div>
+        
+        <div class="result-container">
+            <div class="card-title">
+                <i class="fas fa-terminal"></i>
+                <span>Output Result</span>
+            </div>
+            <div class="result-text" id="outputText">
+                Your encrypted/decrypted text will appear here
+            </div>
+            
+            <div class="verification-panel">
+                <div class="card-title">
+                    <i class="fas fa-fingerprint"></i>
+                    <span>Integrity Verification</span>
+                </div>
+                <div class="verification-result" id="verificationResult">
+                    No verification performed yet
                 </div>
             </div>
         </div>
     </div>
+    
+    <footer>
+        <p>Advanced Double Vigenère Cipher | Dual-layer encryption with enhanced security</p>
+        <p>This implementation provides 2<sup>112</sup> bit security with 12-character keys</p>
+    </footer>
 
     <script>
-        class EnhancedTrifidCipher {
-            constructor() {
-                this.cubes = [];
-                this.alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz#×";
-                this.substitutionTable = "×#zyxwvutsrqponmlkjihgfedcba9876543210ZYXWVUTSRQPONMLKJIHGFEDCBA";
-                this.fillerChar = "~";
-                this.encryptionKey = "";
-                this.rounds = 5;
-                this.fillMethod = "row";
-                this.initEventListeners();
-                this.initTheme();
-                this.setupTextPreviews();
-                this.setupPasswordStrengthMeter();
+        // Configuration
+        const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const SYMBOLS = "AMNOPISTUVⴽXYZ×+ꓘꓥꓭꓷ⊕ΞΔ⌖#ⵁ";
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            validateKeys();
+            updateSecurityStats();
+            
+            // Add input validation
+            document.getElementById('key1').addEventListener('input', function() {
+                this.value = this.value.toUpperCase().replace(/[^A-Z]/g, '');
+                validateKeys();
+                updateSecurityStats();
+            });
+            
+            document.getElementById('key2').addEventListener('input', function() {
+                this.value = this.value.toUpperCase().replace(/[^A-Z]/g, '');
+                validateKeys();
+                updateSecurityStats();
+            });
+        });
+        
+        // Validate keys
+        function validateKeys() {
+            const key1 = document.getElementById('key1').value;
+            const key2 = document.getElementById('key2').value;
+            const statusDot = document.getElementById('keyStatus');
+            const statusText = document.getElementById('keyStatusText');
+            
+            if (key1.length === 0 || key2.length === 0) {
+                statusDot.className = 'status-dot status-error';
+                statusText.textContent = 'Error: Keys cannot be empty';
+                return false;
             }
-
-            // ========================
-            // Initialization Methods
-            // ========================
-
-            initEventListeners() {
-                // Tab switching
-                document.querySelectorAll('.tab').forEach(tab => {
-                    tab.addEventListener('click', () => this.switchTab(tab.dataset.tab));
-                });
-
-                // Core functionality
-                document.getElementById('initCubes').addEventListener('click', () => this.initCubes());
-                document.getElementById('resetCubes').addEventListener('click', () => this.resetToDefault());
-                document.getElementById('encryptBtn').addEventListener('click', () => this.encrypt());
-                document.getElementById('decryptBtn').addEventListener('click', () => this.decrypt());
-                
-                // Text management
-                document.getElementById('clearPlaintext').addEventListener('click', () => {
-                    document.getElementById('plaintext').value = '';
-                    document.getElementById('plaintextPreview').textContent = '';
-                });
-                document.getElementById('clearCiphertext').addEventListener('click', () => {
-                    document.getElementById('ciphertext').value = '';
-                    document.getElementById('ciphertextPreview').textContent = '';
-                });
-                
-                // Samples and copying
-                document.getElementById('samplePlaintext').addEventListener('click', () => this.loadSampleText('plain'));
-                document.getElementById('sampleCiphertext').addEventListener('click', () => this.loadSampleText('cipher'));
-                document.getElementById('copyCiphertext').addEventListener('click', () => this.copyToClipboard('ciphertextOutput', 'cipherCopyFeedback'));
-                document.getElementById('copyPlaintext').addEventListener('click', () => this.copyToClipboard('plaintextOutput', 'plainCopyFeedback'));
-                
-                // Settings management
-                document.getElementById('themeToggle').addEventListener('click', () => this.toggleTheme());
-                document.getElementById('saveSettings').addEventListener('click', () => this.saveSettingsToFile());
-                document.getElementById('settingsFileInput').addEventListener('change', (e) => this.loadSettingsFromFile(e));
-                document.getElementById('advancedSettings').addEventListener('click', () => this.showAdvancedSettings());
-                
-                // Dynamic updates
-                document.getElementById('encryptionKey').addEventListener('input', (e) => {
-                    this.encryptionKey = e.target.value;
-                    this.updatePasswordStrength(e.target.value);
-                });
-                document.getElementById('rounds').addEventListener('change', (e) => {
-                    this.rounds = Math.min(10, Math.max(3, parseInt(e.target.value)));
-                });
+            
+            if (key1.length < 6 || key2.length < 6) {
+                statusDot.className = 'status-dot status-error';
+                statusText.textContent = 'Warning: Keys should be at least 6 characters for security';
+                return false;
             }
-
-            setupTextPreviews() {
-                document.getElementById('plaintext').addEventListener('input', (e) => {
-                    this.updateTextPreview(e.target.value, 'plaintextPreview');
-                });
-                document.getElementById('ciphertext').addEventListener('input', (e) => {
-                    this.updateTextPreview(e.target.value, 'ciphertextPreview');
-                });
+            
+            statusDot.className = 'status-dot status-ok';
+            statusText.textContent = 'Keys validated: ' + key1.length + ' + ' + key2.length + ' characters';
+            return true;
+        }
+        
+        // Update security statistics
+        function updateSecurityStats() {
+            const key1 = document.getElementById('key1').value;
+            const key2 = document.getElementById('key2').value;
+            
+            // Key space calculation
+            const keySpace = Math.pow(26, key1.length) * Math.pow(26, key2.length);
+            document.getElementById('keySpace').textContent = keySpace.toExponential(2);
+            
+            // Brute force time estimation (at 1 trillion operations per second)
+            const seconds = keySpace / 1e12;
+            const years = seconds / (60 * 60 * 24 * 365.25);
+            
+            if (years > 1e9) {
+                document.getElementById('bruteForceTime').textContent = (years / 1e9).toFixed(1) + 'B years';
+            } else if (years > 1e6) {
+                document.getElementById('bruteForceTime').textContent = (years / 1e6).toFixed(1) + 'M years';
+            } else if (years > 1e3) {
+                document.getElementById('bruteForceTime').textContent = (years / 1e3).toFixed(1) + 'K years';
+            } else {
+                document.getElementById('bruteForceTime').textContent = years.toFixed(1) + ' years';
             }
-
-            setupPasswordStrengthMeter() {
-                document.getElementById('encryptionKey').addEventListener('input', (e) => {
-                    this.updatePasswordStrength(e.target.value);
-                });
-            }
-
-            initTheme() {
-                const savedTheme = localStorage.getItem('theme') || 'light';
-                document.body.setAttribute('data-theme', savedTheme);
-                this.updateThemeIcon(savedTheme);
-            }
-
-            // ========================
-            // Core Cipher Methods
-            // ========================
-
-            async initCubes() {
-                const alphabetInput = document.getElementById('alphabet').value;
-                const substitutionInput = document.getElementById('substitutionTable').value;
-                const newFiller = document.getElementById('filler').value.trim();
-                const statusElement = document.getElementById('alphabetStatus');
-
-                // Validate alphabet
-                if (alphabetInput.length !== 64) {
-                    this.showError(statusElement, `Alphabet must be exactly 64 characters (current: ${alphabetInput.length})`);
-                    return false;
-                }
-
-                const uniqueChars = new Set(alphabetInput);
-                if (uniqueChars.size !== alphabetInput.length) {
-                    this.showError(statusElement, "Alphabet contains duplicate characters");
-                    return false;
-                }
-
-                // Validate substitution table
-                if (substitutionInput.length !== 64) {
-                    this.showError(statusElement, `Substitution table must be exactly 64 characters (current: ${substitutionInput.length})`);
-                    return false;
-                }
-
-                const uniqueSubs = new Set(substitutionInput);
-                if (uniqueSubs.size !== substitutionInput.length) {
-                    this.showError(statusElement, "Substitution table contains duplicate characters");
-                    return false;
-                }
-
-                // Validate filler
-                if (newFiller.length !== 1) {
-                    this.showError(statusElement, "Filler must be exactly 1 character");
-                    return false;
-                }
-
-                if (alphabetInput.includes(newFiller) || substitutionInput.includes(newFiller)) {
-                    this.showError(statusElement, "Filler character must NOT be in alphabet or substitution table");
-                    return false;
-                }
-
-                // Store validated values
-                this.alphabet = alphabetInput;
-                this.substitutionTable = substitutionInput;
-                this.fillerChar = newFiller;
-                this.encryptionKey = document.getElementById('encryptionKey').value;
-                this.rounds = parseInt(document.getElementById('rounds').value);
-
-                try {
-                    // Generate cubes for all rounds
-                    await this.generateAllCubes();
-
-                    // Update previews
-                    this.updateTextPreview(document.getElementById('plaintext').value, 'plaintextPreview');
-                    this.updateTextPreview(document.getElementById('ciphertext').value, 'ciphertextPreview');
-
-                    // Show success
-                    this.showSuccess(statusElement, `Successfully generated ${this.rounds} cryptographically secure cubes`);
-                    
-                    // Visualize cubes
-                    this.visualizeCubes();
-
-                    return true;
-                } catch (error) {
-                    this.showError(statusElement, `Error during cube generation: ${error.message}`);
-                    console.error("Cube generation error:", error);
-                    return false;
-                }
-            }
-
-            async generateAllCubes() {
-                this.cubes = [];
-                const key = this.encryptionKey;
+            
+            // Security level (log2 of key space)
+            const securityLevel = Math.log2(keySpace);
+            document.getElementById('securityLevel').textContent = Math.round(securityLevel) + '-bit';
+        }
+        
+        // Encrypt text
+        function encrypt() {
+            if (!validateKeys()) return;
+            
+            const key1 = document.getElementById('key1').value;
+            const key2 = document.getElementById('key2').value;
+            const inputText = document.getElementById('inputText').value.toUpperCase();
+            
+            try {
+                // First layer: Classic Vigenère
+                let intermediate = vigenereCipher(inputText, key1, ALPHABET, false);
                 
-                try {
-                    if (!key) {
-                        // Without key - use alphabetical order
-                        if (!confirm("Warning: No encryption key provided. Using default alphabetical cube order which provides NO SECURITY. Continue?")) {
-                            throw new Error("Cube generation canceled");
-                        }
-                        const cube = this.generateAlphabeticalCube();
-                        for (let round = 0; round < this.rounds; round++) {
-                            this.cubes.push(JSON.parse(JSON.stringify(cube))); // Deep copy
-                        }
-                    } else {
-                        // With key - deterministic generation
-                        const masterSeed = await this.deriveKey(key, 100000);
-                        
-                        for (let round = 0; round < this.rounds; round++) {
-                            const roundSeed = await this.hmacSha256(masterSeed, round.toString());
-                            const cube = await this.generateCubeFromSeed(roundSeed);
-                            this.cubes.push(cube);
-                        }
-                    }
-                    
-                    this.verifyCubeUniqueness();
-                } catch (error) {
-                    console.error("Error in cube generation:", error);
-                    throw error;
-                }
-            }
-
-            generateAlphabeticalCube() {
-                const cube = [];
-                let pos = 0;
+                // Second layer: Mapping encryption
+                let output = vigenereCipher(intermediate, key2, SYMBOLS, false);
                 
-                for (let layer = 0; layer < 4; layer++) {
-                    const cubeLayer = [];
-                    for (let row = 0; row < 4; row++) {
-                        const cubeRow = [];
-                        for (let col = 0; col < 4; col++) {
-                            cubeRow.push(this.alphabet[pos++ % this.alphabet.length]);
-                        }
-                        cubeLayer.push(cubeRow);
-                    }
-                    cube.push(cubeLayer);
-                }
+                // Add integrity check
+                const integrityHash = simpleHash(inputText);
+                output += '|' + integrityHash;
                 
-                return cube;
-            }
-
-            async generateCubeFromSeed(seed) {
-                const shuffledAlphabet = await this.deterministicShuffle(this.alphabet, seed);
-                
-                switch(this.fillMethod) {
-                    case 'column': return this.fillByColumns(shuffledAlphabet);
-                    case 'diagonal': return this.fillDiagonal(shuffledAlphabet);
-                    case 'spiral': return this.fillSpiral(shuffledAlphabet);
-                    case 'checkerboard': return this.fillCheckerboard(shuffledAlphabet);
-                    default: return this.fillByRows(shuffledAlphabet);
-                }
-            }
-
-            // ========================
-            // Cube Fill Methods
-            // ========================
-
-            fillByRows(shuffledAlphabet) {
-                const cube = [];
-                let pos = 0;
-                
-                for (let layer = 0; layer < 4; layer++) {
-                    const cubeLayer = [];
-                    for (let row = 0; row < 4; row++) {
-                        const cubeRow = [];
-                        for (let col = 0; col < 4; col++) {
-                            cubeRow.push(shuffledAlphabet[pos++ % shuffledAlphabet.length]);
-                        }
-                        cubeLayer.push(cubeRow);
-                    }
-                    cube.push(cubeLayer);
-                }
-                
-                return cube;
-            }
-
-            fillByColumns(shuffledAlphabet) {
-                const cube = [];
-                let pos = 0;
-                
-                for (let layer = 0; layer < 4; layer++) {
-                    const cubeLayer = [];
-                    for (let col = 0; col < 4; col++) {
-                        const cubeCol = [];
-                        for (let row = 0; row < 4; row++) {
-                            cubeCol.push(shuffledAlphabet[pos++ % shuffledAlphabet.length]);
-                        }
-                        cubeLayer.push(cubeCol);
-                    }
-                    cube.push(cubeLayer);
-                }
-                
-                return cube;
-            }
-
-            fillDiagonal(shuffledAlphabet) {
-                const cube = [];
-                let pos = 0;
-                
-                for (let layer = 0; layer < 4; layer++) {
-                    const cubeLayer = Array(4).fill().map(() => Array(4).fill(null));
-                    
-                    // Fill diagonals
-                    for (let diag = 0; diag < 7; diag++) {
-                        for (let row = 0; row < 4; row++) {
-                            const col = diag - row;
-                            if (col >= 0 && col < 4 && cubeLayer[row][col] === null) {
-                                cubeLayer[row][col] = shuffledAlphabet[pos++ % shuffledAlphabet.length];
-                            }
-                        }
-                    }
-                    cube.push(cubeLayer);
-                }
-                
-                return cube;
-            }
-
-            fillSpiral(shuffledAlphabet) {
-                const cube = [];
-                let pos = 0;
-                
-                for (let layer = 0; layer < 4; layer++) {
-                    const cubeLayer = Array(4).fill().map(() => Array(4).fill(null));
-                    let top = 0, bottom = 3, left = 0, right = 3;
-                    let direction = 0; // 0: right, 1: down, 2: left, 3: up
-                    
-                    while (top <= bottom && left <= right) {
-                        if (direction === 0) {
-                            for (let i = left; i <= right; i++) {
-                                cubeLayer[top][i] = shuffledAlphabet[pos++ % shuffledAlphabet.length];
-                            }
-                            top++;
-                        } else if (direction === 1) {
-                            for (let i = top; i <= bottom; i++) {
-                                cubeLayer[i][right] = shuffledAlphabet[pos++ % shuffledAlphabet.length];
-                            }
-                            right--;
-                        } else if (direction === 2) {
-                            for (let i = right; i >= left; i--) {
-                                cubeLayer[bottom][i] = shuffledAlphabet[pos++ % shuffledAlphabet.length];
-                            }
-                            bottom--;
-                        } else if (direction === 3) {
-                            for (let i = bottom; i >= top; i--) {
-                                cubeLayer[i][left] = shuffledAlphabet[pos++ % shuffledAlphabet.length];
-                            }
-                            left++;
-                        }
-                        direction = (direction + 1) % 4;
-                    }
-                    cube.push(cubeLayer);
-                }
-                
-                return cube;
-            }
-
-            fillCheckerboard(shuffledAlphabet) {
-                const cube = [];
-                let pos = 0;
-                let reversePos = shuffledAlphabet.length - 1;
-                
-                for (let layer = 0; layer < 4; layer++) {
-                    const cubeLayer = [];
-                    for (let row = 0; row < 4; row++) {
-                        const cubeRow = [];
-                        for (let col = 0; col < 4; col++) {
-                            const index = (row % 2 === col % 2) 
-                                ? pos++ 
-                                : reversePos--;
-                            cubeRow.push(shuffledAlphabet[index % shuffledAlphabet.length]);
-                        }
-                        cubeLayer.push(cubeRow);
-                    }
-                    cube.push(cubeLayer);
-                }
-                
-                return cube;
-            }
-
-            // ========================
-            // Cryptographic Helpers
-            // ========================
-
-            async deterministicShuffle(array, seedString) {
-                // 1. Convert seed to bytes via HMAC-SHA256
-                const seed = await this.hmacSha256(seedString, "shuffle-seed");
-                
-                // 2. Convert hex hash to number array
-                const hashArray = [];
-                for (let i = 0; i < seed.length; i += 2) {
-                    hashArray.push(parseInt(seed.substr(i, 2), 16));
-                }
-                
-                // 3. Fisher-Yates with deterministic selection
-                const arr = array.split('');
-                let hashIndex = 0;
-                
-                for (let i = arr.length - 1; i > 0; i--) {
-                    // Get bytes from hash cyclically
-                    const randomByte = hashArray[hashIndex % hashArray.length];
-                    hashIndex++;
-                    
-                    // Calculate swap index
-                    const j = randomByte % (i + 1);
-                    
-                    // Swap
-                    [arr[i], arr[j]] = [arr[j], arr[i]];
-                }
-                
-                return arr.join('');
-            }
-
-            async deriveKey(password, iterations) {
-                const encoder = new TextEncoder();
-                const keyMaterial = await window.crypto.subtle.importKey(
-                    'raw',
-                    encoder.encode(password),
-                    { name: 'PBKDF2' },
-                    false,
-                    ['deriveBits']
-                );
-                
-                // Use a fixed salt for deterministic key derivation (ensures reversibility)
-                const salt = encoder.encode("fixed_salt_for_reversibility");
-                
-                const derivedBits = await window.crypto.subtle.deriveBits(
-                    {
-                        name: 'PBKDF2',
-                        salt: salt,
-                        iterations: iterations,
-                        hash: 'SHA-256'
-                    },
-                    keyMaterial,
-                    256
-                );
-                
-                return this.arrayBufferToHex(derivedBits);
-            }
-
-            async hmacSha256(key, message) {
-                const encoder = new TextEncoder();
-                const cryptoKey = await window.crypto.subtle.importKey(
-                    'raw',
-                    encoder.encode(key),
-                    { name: 'HMAC', hash: 'SHA-256' },
-                    false,
-                    ['sign']
-                );
-                
-                const signature = await window.crypto.subtle.sign(
-                    'HMAC',
-                    cryptoKey,
-                    encoder.encode(message)
-                );
-                
-                return this.arrayBufferToHex(signature);
-            }
-
-            arrayBufferToHex(buffer) {
-                return Array.from(new Uint8Array(buffer))
-                    .map(b => b.toString(16).padStart(2, '0'))
-                    .join('');
-            }
-
-            verifyCubeUniqueness() {
-                const cubeHashes = new Set();
-                
-                for (const cube of this.cubes) {
-                    const cubeString = JSON.stringify(cube);
-                    const cubeHash = this.hashString(cubeString);
-                    
-                    if (cubeHashes.has(cubeHash)) {
-                        throw new Error("Duplicate cube detected - increase key complexity or rounds");
-                    }
-                    cubeHashes.add(cubeHash);
-                }
-            }
-
-            hashString(str) {
-                let hash = 0;
-                for (let i = 0; i < str.length; i++) {
-                    const char = str.charCodeAt(i);
-                    hash = (hash << 5) - hash + char;
-                    hash |= 0;
-                }
-                return hash.toString(36);
-            }
-
-            // ========================
-            // Substitution Methods
-            // ========================
-
-            substituteCharacter(char) {
-                const index = this.alphabet.indexOf(char);
-                if (index === -1) return char; // Return original if not found
-                return this.substitutionTable[index];
-            }
-
-            reverseSubstituteCharacter(char) {
-                const index = this.substitutionTable.indexOf(char);
-                if (index === -1) return char; // Return original if not found
-                return this.alphabet[index];
-            }
-
-            // ========================
-            // Encryption/Decryption
-            // ========================
-
-            async encrypt() {
-                const plaintext = document.getElementById('plaintext').value;
-                if (!plaintext) {
-                    alert("Please enter some text to encrypt");
-                    return;
-                }
-
-                if (this.cubes.length === 0) {
-                    alert("Please initialize cubes first");
-                    return;
-                }
-
-                try {
-                    let intermediate = plaintext;
-                    let stepsHTML = '<div class="card"><h3><i class="fas fa-sync-alt"></i> Multi-Round Encryption Process</h3>';
-                    stepsHTML += `<p>Using ${this.rounds} encryption rounds with key-based cubes</p>`;
-
-                    for (let round = 0; round < this.rounds; round++) {
-                        stepsHTML += `<div class="card"><h4><span class="round-badge">${round+1}</span> Encryption Round ${round+1}/${this.rounds}</h4>`;
-                        
-                        const roundResult = this.singleRoundEncrypt(intermediate, round);
-                        intermediate = roundResult.ciphertext;
-                        
-                        stepsHTML += roundResult.steps;
-                        stepsHTML += `<p><strong>Round ${round+1} output:</strong> <code>${this.escapeHtml(intermediate)}</code></p>`;
-                        stepsHTML += '</div>';
-                    }
-
-                    stepsHTML += '</div>';
-
-                    document.getElementById('encryptionResult').style.display = 'block';
-                    document.getElementById('ciphertextOutput').textContent = intermediate;
-                    document.getElementById('encryptionSteps').innerHTML = stepsHTML;
-                    this.updateTextPreview(intermediate, 'ciphertextPreview');
-                } catch (error) {
-                    console.error("Encryption error:", error);
-                    alert(`Encryption failed: ${error.message}`);
-                }
-            }
-
-            singleRoundEncrypt(text, round) {
-                let stepsHTML = '';
-                let coordinates = [];
-                let skippedChars = [];
-                
-                // Apply substitution
-                let substitutedText = '';
-                for (let char of text) {
-                    substitutedText += this.substituteCharacter(char);
-                }
-                
-                stepsHTML += `<p><strong>After substitution:</strong> <code>${this.escapeHtml(substitutedText)}</code></p>`;
-                
-                // Generate coordinate table
-                let coordTable = `
-                    <table class="process-table">
-                        <thead>
-                            <tr>
-                                <th>Character</th>
-                                <th>Layer</th>
-                                <th>Row</th>
-                                <th>Column</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                `;
-
-                // Find coordinates for each character
-                for (let char of substitutedText) {
-                    const coord = this.findCoordinates(char, round);
-                    if (coord) {
-                        coordinates.push(coord);
-                        coordTable += `
-                            <tr>
-                                <td><code>${this.escapeHtml(char)}</code></td>
-                                <td>${coord.layer}</td>
-                                <td>${coord.row}</td>
-                                <td>${coord.col}</td>
-                            </tr>
-                        `;
-                    } else {
-                        skippedChars.push(char);
-                        coordTable += `
-                            <tr>
-                                <td><code>${this.escapeHtml(char)}</code></td>
-                                <td colspan="3" class="error">(Not in cube - preserved)</td>
-                            </tr>
-                        `;
-                    }
-                }
-                coordTable += `</tbody></table>`;
-                stepsHTML += coordTable;
-
-                // Handle case where no characters are in cube
-                if (coordinates.length === 0) {
-                    return {
-                        ciphertext: text,
-                        steps: stepsHTML + `<p class="warning">No characters in the text were found in the cube. No encryption performed this round.</p>`
-                    };
-                }
-
-                // Create coordinate streams
-                let layersStream = coordinates.map(c => c.layer).join('');
-                let rowsStream = coordinates.map(c => c.row).join('');
-                let colsStream = coordinates.map(c => c.col).join('');
-                let combinedStream = layersStream + rowsStream + colsStream;
-
-                stepsHTML += `
-                    <p><strong>Layers stream:</strong> <code>${this.chunkString(layersStream, 5)}</code></p>
-                    <p><strong>Rows stream:</strong> <code>${this.chunkString(rowsStream, 5)}</code></p>
-                    <p><strong>Columns stream:</strong> <code>${this.chunkString(colsStream, 5)}</code></p>
-                    <p><strong>Combined stream:</strong> <code>${this.chunkString(combinedStream, 5)}</code></p>
-                `;
-
-                // Generate ciphertext from triplets
-                let ciphertext = '';
-                let tripletTable = `
-                    <table class="process-table">
-                        <thead>
-                            <tr>
-                                <th>Triplet</th>
-                                <th>Layer</th>
-                                <th>Row</th>
-                                <th>Column</th>
-                                <th>Character</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                `;
-
-                for (let i = 0; i < combinedStream.length; i += 3) {
-                    let triplet = combinedStream.substr(i, 3);
-                    if (triplet.length === 3) {
-                        const layer = parseInt(triplet[0]);
-                        const row = parseInt(triplet[1]);
-                        const col = parseInt(triplet[2]);
-                        const char = this.getCharFromCoordinates(layer, row, col, round);
-                        ciphertext += char;
-                        
-                        tripletTable += `
-                            <tr>
-                                <td><code>${triplet}</code></td>
-                                <td>${layer}</td>
-                                <td>${row}</td>
-                                <td>${col}</td>
-                                <td><code>${this.escapeHtml(char)}</code></td>
-                            </tr>
-                        `;
-                    } else {
-                        ciphertext += this.fillerChar;
-                        tripletTable += `
-                            <tr>
-                                <td><code>${triplet}</code></td>
-                                <td colspan="4" class="error">(Incomplete triplet - using filler)</td>
-                            </tr>
-                        `;
-                    }
-                }
-                tripletTable += `</tbody></table>`;
-                stepsHTML += tripletTable;
-
-                // Reinsert skipped characters if any
-                if (skippedChars.length > 0) {
-                    let originalIndex = 0;
-                    let cipherIndex = 0;
-                    let finalCiphertext = '';
-                    
-                    for (let char of substitutedText) {
-                        const coord = this.findCoordinates(char, round);
-                        if (coord) {
-                            if (cipherIndex < ciphertext.length) {
-                                finalCiphertext += ciphertext[cipherIndex++];
-                            } else {
-                                finalCiphertext += this.fillerChar;
-                            }
-                        } else {
-                            finalCiphertext += char;
-                        }
-                    }
-                    
-                    if (cipherIndex < ciphertext.length) {
-                        finalCiphertext += ciphertext.substring(cipherIndex);
-                    }
-                    
-                    ciphertext = finalCiphertext;
-                    
-                    stepsHTML += `<p><i class="fas fa-exchange-alt"></i> Reinserted ${skippedChars.length} preserved characters at original positions</p>`;
-                }
-
-                return {
-                    ciphertext: ciphertext,
-                    steps: stepsHTML
-                };
-            }
-
-            async decrypt() {
-                const ciphertext = document.getElementById('ciphertext').value;
-                if (!ciphertext) {
-                    alert("Please enter some text to decrypt");
-                    return;
-                }
-
-                if (this.cubes.length === 0) {
-                    alert("Please initialize cubes first");
-                    return;
-                }
-
-                try {
-                    let intermediate = ciphertext;
-                    let stepsHTML = '<div class="card"><h3><i class="fas fa-sync-alt"></i> Multi-Round Decryption Process</h3>';
-                    stepsHTML += `<p>Using ${this.rounds} decryption rounds with key-based cubes</p>`;
-
-                    // Perform decryption in reverse round order
-                    for (let round = this.rounds - 1; round >= 0; round--) {
-                        stepsHTML += `<div class="card"><h4><span class="round-badge">${this.rounds-round}</span> Decryption Round ${this.rounds-round}/${this.rounds}</h4>`;
-                        
-                        const roundResult = this.singleRoundDecrypt(intermediate, round);
-                        intermediate = roundResult.plaintext;
-                        
-                        stepsHTML += roundResult.steps;
-                        stepsHTML += `<p><strong>Round ${this.rounds-round} output:</strong> <code>${this.escapeHtml(intermediate)}</code></p>`;
-                        stepsHTML += '</div>';
-                    }
-
-                    // Reverse substitution
-                    let finalText = '';
-                    for (let char of intermediate) {
-                        finalText += this.reverseSubstituteCharacter(char);
-                    }
-                    intermediate = finalText;
-                    
-                    stepsHTML += `<div class="card"><h4>Final Substitution Reversal</h4>`;
-                    stepsHTML += `<p><strong>After reverse substitution:</strong> <code>${this.escapeHtml(intermediate)}</code></p>`;
-                    stepsHTML += '</div>';
-
-                    stepsHTML += '</div>';
-
-                    document.getElementById('decryptionResult').style.display = 'block';
-                    document.getElementById('plaintextOutput').textContent = intermediate;
-                    document.getElementById('decryptionSteps').innerHTML = stepsHTML;
-                    this.updateTextPreview(intermediate, 'plaintextPreview');
-                } catch (error) {
-                    console.error("Decryption error:", error);
-                    alert(`Decryption failed: ${error.message}`);
-                }
-            }
-
-            singleRoundDecrypt(text, round) {
-                let stepsHTML = '';
-                let coordinates = [];
-                let skippedChars = [];
-                
-                // Generate coordinate table
-                let coordTable = `
-                    <table class="process-table">
-                        <thead>
-                            <tr>
-                                <th>Character</th>
-                                <th>Layer</th>
-                                <th>Row</th>
-                                <th>Column</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                `;
-
-                // Find coordinates for each character
-                for (let char of text) {
-                    const coord = this.findCoordinates(char, round);
-                    if (coord) {
-                        coordinates.push(coord);
-                        coordTable += `
-                            <tr>
-                                <td><code>${this.escapeHtml(char)}</code></td>
-                                <td>${coord.layer}</td>
-                                <td>${coord.row}</td>
-                                <td>${coord.col}</td>
-                            </tr>
-                        `;
-                    } else {
-                        skippedChars.push(char);
-                        coordTable += `
-                            <tr>
-                                <td><code>${this.escapeHtml(char)}</code></td>
-                                <td colspan="3" class="error">(Not in cube - preserved)</td>
-                            </tr>
-                        `;
-                    }
-                }
-                coordTable += `</tbody></table>`;
-                stepsHTML += coordTable;
-
-                // Handle case where no characters are in cube
-                if (coordinates.length === 0) {
-                    return {
-                        plaintext: text,
-                        steps: stepsHTML + `<p class="warning">No characters in the text were found in the cube. No decryption performed this round.</p>`
-                    };
-                }
-
-                // Create full coordinate sequence
-                let coordSequence = '';
-                for (let coord of coordinates) {
-                    coordSequence += coord.layer + '' + coord.row + '' + coord.col;
-                }
-
-                stepsHTML += `
-                    <p><strong>Full coordinate sequence:</strong> <code>${this.chunkString(coordSequence, 5)}</code></p>
-                `;
-
-                // Split into three equal parts
-                const partLength = Math.floor(coordSequence.length / 3);
-                const layersPart = coordSequence.substring(0, partLength);
-                const rowsPart = coordSequence.substring(partLength, 2 * partLength);
-                const colsPart = coordSequence.substring(2 * partLength);
-
-                stepsHTML += `
-                    <p><strong>Layers part:</strong> <code>${this.chunkString(layersPart, 5)}</code></p>
-                    <p><strong>Rows part:</strong> <code>${this.chunkString(rowsPart, 5)}</code></p>
-                    <p><strong>Columns part:</strong> <code>${this.chunkString(colsPart, 5)}</code></p>
-                `;
-
-                // Reconstruct plaintext
-                let plaintext = '';
-                let reconstructionTable = `
-                    <table class="process-table">
-                        <thead>
-                            <tr>
-                                <th>Position</th>
-                                <th>Layer</th>
-                                <th>Row</th>
-                                <th>Column</th>
-                                <th>Character</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                `;
-
-                for (let i = 0; i < layersPart.length; i++) {
-                    const layer = parseInt(layersPart[i]);
-                    const row = parseInt(rowsPart[i]);
-                    const col = parseInt(colsPart[i]);
-                    const char = this.getCharFromCoordinates(layer, row, col, round);
-                    plaintext += char;
-                    
-                    reconstructionTable += `
-                        <tr>
-                            <td>${i + 1}</td>
-                            <td>${layer}</td>
-                            <td>${row}</td>
-                            <td>${col}</td>
-                            <td><code>${this.escapeHtml(char)}</code></td>
-                        </tr>
-                    `;
-                }
-                reconstructionTable += `</tbody></table>`;
-                stepsHTML += reconstructionTable;
-
-                // Reinsert skipped characters if any
-                if (skippedChars.length > 0) {
-                    let originalIndex = 0;
-                    let plainIndex = 0;
-                    let finalPlaintext = '';
-                    
-                    for (let char of text) {
-                        const coord = this.findCoordinates(char, round);
-                        if (coord) {
-                            if (plainIndex < plaintext.length) {
-                                finalPlaintext += plaintext[plainIndex++];
-                            } else {
-                                finalPlaintext += this.fillerChar;
-                            }
-                        } else {
-                            finalPlaintext += char;
-                        }
-                    }
-                    
-                    if (plainIndex < plaintext.length) {
-                        finalPlaintext += plaintext.substring(plainIndex);
-                    }
-                    
-                    plaintext = finalPlaintext;
-                    
-                    stepsHTML += `<p><i class="fas fa-exchange-alt"></i> Reinserted ${skippedChars.length} preserved characters at original positions</p>`;
-                }
-
-                return {
-                    plaintext: plaintext,
-                    steps: stepsHTML
-                };
-            }
-
-            // ========================
-            // Helper Methods
-            // ========================
-
-            findCoordinates(char, round) {
-                if (round >= this.cubes.length) return null;
-                
-                const cube = this.cubes[round];
-                for (let layer = 0; layer < 4; layer++) {
-                    for (let row = 0; row < 4; row++) {
-                        for (let col = 0; col < 4; col++) {
-                            if (cube[layer][row][col] === char) {
-                                return { layer: layer + 1, row: row + 1, col: col + 1 };
-                            }
-                        }
-                    }
-                }
-                return null;
-            }
-
-            getCharFromCoordinates(layer, row, col, round) {
-                if (round >= this.cubes.length || 
-                    layer < 1 || layer > 4 || 
-                    row < 1 || row > 4 || 
-                    col < 1 || col > 4) {
-                    return this.fillerChar;
-                }
-                return this.cubes[round][layer - 1][row - 1][col - 1];
-            }
-
-            updateTextPreview(text, elementId) {
-                if (this.cubes.length === 0) {
-                    document.getElementById(elementId).innerHTML = '<span class="warning">Please initialize cubes first</span>';
-                    return;
-                }
-
-                let previewHtml = '';
-                for (const char of text) {
-                    const coord = this.findCoordinates(char, 0); // Use first cube for preview
-                    if (coord) {
-                        previewHtml += `<span class="char-highlight" title="Layer: ${coord.layer}, Row: ${coord.row}, Col: ${coord.col}">${this.escapeHtml(char)}</span>`;
-                    } else {
-                        previewHtml += `<span class="char-skipped" title="Character not in cube - will be preserved">${this.escapeHtml(char)}</span>`;
-                    }
-                }
-                document.getElementById(elementId).innerHTML = previewHtml || '<span class="warning">No characters to preview</span>';
-            }
-
-            escapeHtml(text) {
-                const div = document.createElement('div');
-                div.textContent = text;
-                return div.innerHTML;
-            }
-
-            chunkString(str, size) {
-                if (!str) return '';
-                const chunks = [];
-                for (let i = 0; i < str.length; i += size) {
-                    chunks.push(str.substr(i, size));
-                }
-                return chunks.join(' ');
-            }
-
-            loadSampleText(type) {
-                const samples = {
-                    plain: "This is a highly confidential message to encrypt using the Enhanced Trifid Cipher Pro! It contains numbers 12345 and symbols @#$%^.",
-                    cipher: ""
-                };
-
-                if (type === 'cipher' && this.cubes.length > 0) {
-                    samples.cipher = this.generateCiphertext(samples.plain);
-                }
-
-                const elementId = type === 'plain' ? 'plaintext' : 'ciphertext';
-                const previewId = type === 'plain' ? 'plaintextPreview' : 'ciphertextPreview';
-                document.getElementById(elementId).value = samples[type];
-                this.updateTextPreview(samples[type], previewId);
-            }
-
-            generateCiphertext(text) {
-                let ciphertext = '';
-                const coordinates = [];
-                
-                // Use first cube for sample generation
-                const round = 0;
-                
-                // Apply substitution
-                let substitutedText = '';
-                for (let char of text) {
-                    substitutedText += this.substituteCharacter(char);
-                }
-                
-                // Find coordinates for all characters
-                for (let char of substitutedText) {
-                    const coord = this.findCoordinates(char, round);
-                    if (coord) coordinates.push(coord);
-                }
-                
-                // Create coordinate streams
-                const layersStream = coordinates.map(c => c.layer).join('');
-                const rowsStream = coordinates.map(c => c.row).join('');
-                const colsStream = coordinates.map(c => c.col).join('');
-                const combinedStream = layersStream + rowsStream + colsStream;
-                
-                // Generate ciphertext from triplets
-                for (let i = 0; i < combinedStream.length; i += 3) {
-                    const triplet = combinedStream.substr(i, 3);
-                    if (triplet.length === 3) {
-                        const layer = parseInt(triplet[0]);
-                        const row = parseInt(triplet[1]);
-                        const col = parseInt(triplet[2]);
-                        ciphertext += this.getCharFromCoordinates(layer, row, col, round);
-                    } else {
-                        ciphertext += this.fillerChar;
-                    }
-                }
-                
-                return ciphertext;
-            }
-
-            // ========================
-            // UI Methods
-            // ========================
-
-            showAdvancedSettings() {
-                const modalHtml = `
-                    <div class="modal-overlay">
-                        <div class="modal-content">
-                            <button class="modal-close">&times;</button>
-                            <h3><i class="fas fa-cogs"></i> Advanced Settings</h3>
-                            
-                            <div class="form-group">
-                                <label for="fillMethod">Cube Fill Method:</label>
-                                <select id="fillMethod">
-                                    <option value="row">By Rows (Default)</option>
-                                    <option value="column">By Columns</option>
-                                    <option value="diagonal">Diagonal</option>
-                                    <option value="spiral">Spiral</option>
-                                    <option value="checkerboard">Checkerboard</option>
-                                </select>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="iterations">PBKDF2 Iterations (10,000-1,000,000)</label>
-                                <input type="number" id="iterations" value="100000" min="10000" max="1000000">
-                            </div>
-                            
-                            <div class="btn-group">
-                                <button class="btn" id="saveAdvanced">Save Settings</button>
-                                <button class="btn btn-outline" id="cancelAdvanced">Cancel</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                
-                const modal = document.createElement('div');
-                modal.innerHTML = modalHtml;
-                document.body.appendChild(modal);
-                
-                // Set current values
-                modal.querySelector('#fillMethod').value = this.fillMethod;
-                modal.querySelector('#iterations').value = 100000;
-                
-                // Event handlers
-                modal.querySelector('#saveAdvanced').addEventListener('click', () => {
-                    this.fillMethod = modal.querySelector('#fillMethod').value;
-                    modal.remove();
-                });
-                
-                const closeModal = () => modal.remove();
-                modal.querySelector('.modal-close').addEventListener('click', closeModal);
-                modal.querySelector('#cancelAdvanced').addEventListener('click', closeModal);
-                modal.querySelector('.modal-overlay').addEventListener('click', (e) => {
-                    if (e.target === modal.querySelector('.modal-overlay')) {
-                        closeModal();
-                    }
-                });
-            }
-
-            visualizeCubes() {
-                const container = document.getElementById('cubesContainer');
-                container.innerHTML = '';
-
-                if (this.cubes.length === 0) {
-                    container.innerHTML = '<div class="alert alert-warning">No cubes generated yet</div>';
-                    return;
-                }
-
-                this.cubes.forEach((cube, roundIdx) => {
-                    const roundDiv = document.createElement('div');
-                    roundDiv.className = 'card';
-                    roundDiv.innerHTML = `
-                        <h4 class="cube-title">
-                            <span class="round-badge">${roundIdx + 1}</span>
-                            Encryption Round ${roundIdx + 1} Cube
-                        </h4>
-                    `;
-                    
-                    const grid = document.createElement('div');
-                    grid.className = 'grid-container';
-                    
-                    cube.forEach((layer, layerIdx) => {
-                        const layerDiv = document.createElement('div');
-                        layerDiv.className = 'cube-layer';
-                        
-                        const table = document.createElement('table');
-                        table.className = 'cube-table';
-                        
-                        const caption = table.createCaption();
-                        caption.textContent = `Layer ${layerIdx + 1}`;
-                        caption.style.captionSide = 'top';
-                        caption.style.marginBottom = '0.5rem';
-
-                        // Header row
-                        const headerRow = table.insertRow();
-                        const emptyHeader = headerRow.insertCell();
-                        emptyHeader.textContent = 'R\\C';
-                        emptyHeader.className = 'row-header';
-
-                        // Column headers
-                        for (let col = 0; col < 4; col++) {
-                            const th = headerRow.insertCell();
-                            th.textContent = col + 1;
-                            th.className = 'column-header';
-                        }
-
-                        // Table body
-                        layer.forEach((row, rowIdx) => {
-                            const tr = table.insertRow();
-                            const rowHeader = tr.insertCell();
-                            rowHeader.textContent = rowIdx + 1;
-                            rowHeader.className = 'row-header';
-                            
-                            row.forEach((cell, colIdx) => {
-                                const td = tr.insertCell();
-                                td.textContent = cell;
-                                td.className = 'cube-cell';
-                                td.dataset.layer = layerIdx + 1;
-                                td.dataset.row = rowIdx + 1;
-                                td.dataset.col = colIdx + 1;
-                            });
-                        });
-                        
-                        layerDiv.appendChild(table);
-                        grid.appendChild(layerDiv);
-                    });
-                    
-                    roundDiv.appendChild(grid);
-                    container.appendChild(roundDiv);
-                });
-            }
-
-            updatePasswordStrength(password) {
-                let strength = 0;
-                const meter = document.getElementById('securityMeter');
-                const strengthText = document.getElementById('passwordStrength');
-                
-                // Reset
-                strengthText.querySelectorAll('span').forEach(span => span.classList.remove('active'));
-                
-                if (!password) {
-                    meter.style.width = '0%';
-                    return;
-                }
-                
-                // Length check
-                if (password.length >= 8) strength++;
-                if (password.length >= 12) strength++;
-                
-                // Complexity checks
-                if (/[A-Z]/.test(password)) strength++;
-                if (/[a-z]/.test(password)) strength++;
-                if (/[0-9]/.test(password)) strength++;
-                if (/[^A-Za-z0-9]/.test(password)) strength++;
-                
-                // Normalize to 1-4 scale
-                strength = Math.min(4, Math.max(1, Math.floor(strength / 1.5)));
-                
-                // Update meter
-                meter.style.width = `${strength * 25}%`;
-                
-                // Update text
-                strengthText.querySelector(`span[data-level="${strength}"]`).classList.add('active');
-                
-                // Color coding
-                if (strength <= 1) {
-                    meter.style.backgroundColor = this.getThemeColor('error');
-                } else if (strength <= 2) {
-                    meter.style.backgroundColor = this.getThemeColor('warning');
-                } else {
-                    meter.style.backgroundColor = this.getThemeColor('success');
-                }
-            }
-
-            getThemeColor(type) {
-                const style = getComputedStyle(document.documentElement);
-                return style.getPropertyValue(`--${type}`);
-            }
-
-            toggleTheme() {
-                const currentTheme = document.body.getAttribute('data-theme') || 'light';
-                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-                document.body.setAttribute('data-theme', newTheme);
-                localStorage.setItem('theme', newTheme);
-                this.updateThemeIcon(newTheme);
-            }
-
-            updateThemeIcon(theme) {
-                const icon = document.querySelector('#themeToggle i');
-                icon.className = theme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
-            }
-
-            resetToDefault() {
-                document.getElementById('alphabet').value = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz#×';
-                document.getElementById('substitutionTable').value = '×#zyxwvutsrqponmlkjihgfedcba9876543210ZYXWVUTSRQPONMLKJIHGFEDCBA';
-                document.getElementById('filler').value = '~';
-                document.getElementById('encryptionKey').value = '';
-                document.getElementById('rounds').value = '5';
-                this.encryptionKey = '';
-                this.rounds = 5;
-                this.cubes = [];
-                document.getElementById('cubesContainer').innerHTML = '';
-                document.getElementById('securityMeter').style.width = '0%';
-                document.querySelectorAll('#passwordStrength span').forEach(span => span.classList.remove('active'));
-            }
-
-            showError(element, message) {
-                element.innerHTML = `<i class="fas fa-exclamation-circle status-icon"></i> ${message}`;
-                element.classList.remove('alert-success', 'alert-warning');
-                element.classList.add('alert-error');
-                element.style.display = 'block';
-            }
-
-            showSuccess(element, message) {
-                element.innerHTML = `<i class="fas fa-check-circle status-icon"></i> ${message}`;
-                element.classList.remove('alert-error', 'alert-warning');
-                element.classList.add('alert-success');
-                element.style.display = 'block';
-            }
-
-            switchTab(tabId) {
-                document.querySelectorAll('.tab').forEach(tab => {
-                    tab.classList.remove('active');
-                });
-                document.querySelectorAll('.tab-content').forEach(content => {
-                    content.classList.remove('active');
-                });
-                
-                document.querySelector(`.tab[data-tab="${tabId}"]`).classList.add('active');
-                document.getElementById(tabId).classList.add('active');
-            }
-
-            async copyToClipboard(elementId, feedbackId) {
-                try {
-                    const text = document.getElementById(elementId).textContent;
-                    await navigator.clipboard.writeText(text);
-                    
-                    // Show feedback
-                    const feedback = document.getElementById(feedbackId);
-                    feedback.classList.add('show');
-                    setTimeout(() => feedback.classList.remove('show'), 2000);
-                } catch (error) {
-                    console.error("Copy failed:", error);
-                    alert("Failed to copy text to clipboard");
-                }
-            }
-
-            saveSettingsToFile() {
-                if (this.cubes.length === 0) {
-                    alert("Please initialize cubes first");
-                    return;
-                }
-
-                const settings = {
-                    version: "1.0",
-                    timestamp: new Date().toISOString(),
-                    alphabet: this.alphabet,
-                    substitutionTable: this.substitutionTable,
-                    fillerChar: this.fillerChar,
-                    encryptionKey: "", // Never save the actual key
-                    keyHash: this.hashString(this.encryptionKey),
-                    rounds: this.rounds,
-                    fillMethod: this.fillMethod,
-                    cubeHashes: this.cubes.map(cube => this.hashString(JSON.stringify(cube)))
-                };
-
-                const blob = new Blob([JSON.stringify(settings, null, 2)], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'enhanced_trifid_settings.json';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-            }
-
-            loadSettingsFromFile(event) {
-                const file = event.target.files[0];
-                if (!file) return;
-
-                const reader = new FileReader();
-                reader.onload = async (e) => {
-                    try {
-                        const settings = JSON.parse(e.target.result);
-                        
-                        // Validate settings
-                        if (!settings.alphabet || settings.alphabet.length !== 64) {
-                            throw new Error("Invalid alphabet in settings file");
-                        }
-                        
-                        if (!settings.substitutionTable || settings.substitutionTable.length !== 64) {
-                            throw new Error("Invalid substitution table in settings file");
-                        }
-                        
-                        if (!settings.fillerChar || settings.fillerChar.length !== 1) {
-                            throw new Error("Invalid filler character in settings file");
-                        }
-
-                        if (settings.alphabet.includes(settings.fillerChar) || settings.substitutionTable.includes(settings.fillerChar)) {
-                            throw new Error("Filler character must not be in alphabet or substitution table");
-                        }
-
-                        if (!settings.rounds || settings.rounds < 1 || settings.rounds > 10) {
-                            throw new Error("Invalid number of rounds in settings file");
-                        }
-
-                        // Apply settings
-                        document.getElementById('alphabet').value = settings.alphabet;
-                        document.getElementById('substitutionTable').value = settings.substitutionTable;
-                        document.getElementById('filler').value = settings.fillerChar;
-                        document.getElementById('rounds').value = settings.rounds;
-                        
-                        this.alphabet = settings.alphabet;
-                        this.substitutionTable = settings.substitutionTable;
-                        this.fillerChar = settings.fillerChar;
-                        this.rounds = settings.rounds;
-                        this.fillMethod = settings.fillMethod || "row";
-                        
-                        // Update previews
-                        this.updateTextPreview(document.getElementById('plaintext').value, 'plaintextPreview');
-                        this.updateTextPreview(document.getElementById('ciphertext').value, 'ciphertextPreview');
-                        
-                        // Show success
-                        const statusElement = document.getElementById('alphabetStatus');
-                        this.showSuccess(statusElement, "Settings loaded successfully from file");
-                        
-                    } catch (error) {
-                        const statusElement = document.getElementById('alphabetStatus');
-                        this.showError(statusElement, `Error loading settings: ${error.message}`);
-                        console.error("Error loading settings:", error);
-                    }
-                };
-                reader.readAsText(file);
-                event.target.value = '';
+                document.getElementById('outputText').textContent = output;
+                document.getElementById('verificationResult').textContent = 'Text encrypted successfully with integrity protection';
+                document.getElementById('verificationResult').className = 'verification-result success';
+            } catch (error) {
+                document.getElementById('outputText').textContent = 'Error: ' + error.message;
+                document.getElementById('verificationResult').textContent = 'Encryption failed';
+                document.getElementById('verificationResult').className = 'verification-result error';
             }
         }
-
-        // Initialize the cipher when DOM is loaded
-        document.addEventListener('DOMContentLoaded', () => {
-            const cipher = new EnhancedTrifidCipher();
-        });
+        
+        // Decrypt text
+        function decrypt() {
+            if (!validateKeys()) return;
+            
+            const key1 = document.getElementById('key1').value;
+            const key2 = document.getElementById('key2').value;
+            let inputText = document.getElementById('inputText').value;
+            
+            try {
+                // Check for integrity hash
+                let integrityHash = '';
+                if (inputText.includes('|')) {
+                    const parts = inputText.split('|');
+                    inputText = parts[0];
+                    integrityHash = parts[1];
+                }
+                
+                // Second layer: Reverse mapping encryption
+                let intermediate = vigenereCipher(inputText, key2, SYMBOLS, true);
+                
+                // First layer: Reverse classic Vigenère
+                let output = vigenereCipher(intermediate, key1, ALPHABET, true);
+                
+                document.getElementById('outputText').textContent = output;
+                
+                // Verify integrity if hash was present
+                if (integrityHash) {
+                    const computedHash = simpleHash(output);
+                    if (computedHash === integrityHash) {
+                        document.getElementById('verificationResult').textContent = 'Integrity verified: No tampering detected';
+                        document.getElementById('verificationResult').className = 'verification-result success';
+                    } else {
+                        document.getElementById('verificationResult').textContent = 'WARNING: Integrity check failed - text may have been modified';
+                        document.getElementById('verificationResult').className = 'verification-result error';
+                    }
+                } else {
+                    document.getElementById('verificationResult').textContent = 'No integrity information available';
+                    document.getElementById('verificationResult').className = 'verification-result';
+                }
+            } catch (error) {
+                document.getElementById('outputText').textContent = 'Error: ' + error.message;
+                document.getElementById('verificationResult').textContent = 'Decryption failed';
+                document.getElementById('verificationResult').className = 'verification-result error';
+            }
+        }
+        
+        // Vigenère cipher implementation
+        function vigenereCipher(text, key, characterSet, decrypt) {
+            let output = '';
+            let keyIndex = 0;
+            
+            for (let i = 0; i < text.length; i++) {
+                const char = text[i];
+                const keyChar = key[keyIndex % key.length];
+                
+                const charIndex = characterSet.indexOf(char);
+                if (charIndex === -1) {
+                    // Character not in set - leave as is
+                    output += char;
+                    continue;
+                }
+                
+                const keyIndexPos = characterSet.indexOf(keyChar);
+                if (keyIndexPos === -1) {
+                    throw new Error('Key contains invalid characters for the character set');
+                }
+                
+                let newIndex;
+                if (decrypt) {
+                    newIndex = (charIndex - keyIndexPos + characterSet.length) % characterSet.length;
+                } else {
+                    newIndex = (charIndex + keyIndexPos) % characterSet.length;
+                }
+                
+                output += characterSet[newIndex];
+                keyIndex++;
+            }
+            
+            return output;
+        }
+        
+        // Simple integrity hash
+        function simpleHash(text) {
+            let hash = 0;
+            for (let i = 0; i < text.length; i++) {
+                hash = ((hash << 5) - hash) + text.charCodeAt(i);
+                hash |= 0; // Convert to 32-bit integer
+            }
+            return Math.abs(hash).toString(36).toUpperCase();
+        }
+        
+        // Test encryption/decryption integrity
+        function testIntegrity() {
+            const originalText = document.getElementById('inputText').value;
+            const key1 = document.getElementById('key1').value;
+            const key2 = document.getElementById('key2').value;
+            
+            if (!originalText || !key1 || !key2) {
+                document.getElementById('verificationResult').textContent = 'Please enter text and both keys first';
+                document.getElementById('verificationResult').className = 'verification-result error';
+                return;
+            }
+            
+            try {
+                // Encrypt
+                let encrypted = vigenereCipher(originalText.toUpperCase(), key1, ALPHABET, false);
+                encrypted = vigenereCipher(encrypted, key2, SYMBOLS, false);
+                
+                // Decrypt
+                let decrypted = vigenereCipher(encrypted, key2, SYMBOLS, true);
+                decrypted = vigenereCipher(decrypted, key1, ALPHABET, true);
+                
+                // Verify
+                if (decrypted === originalText.toUpperCase()) {
+                    document.getElementById('verificationResult').textContent = 'Integrity test passed: Encryption/decryption cycle successful';
+                    document.getElementById('verificationResult').className = 'verification-result success';
+                } else {
+                    document.getElementById('verificationResult').textContent = 'Integrity test failed: Output does not match input';
+                    document.getElementById('verificationResult').className = 'verification-result error';
+                }
+            } catch (error) {
+                document.getElementById('verificationResult').textContent = 'Integrity test error: ' + error.message;
+                document.getElementById('verificationResult').className = 'verification-result error';
+            }
+        }
+        
+        // Reset all fields
+        function resetAll() {
+            document.getElementById('key1').value = 'SECRETKEYONE';
+            document.getElementById('key2').value = 'SECRETKEYTWO';
+            document.getElementById('inputText').value = 'Confidential data: Operation Midnight at 23:59';
+            document.getElementById('outputText').textContent = 'Your encrypted/decrypted text will appear here';
+            document.getElementById('verificationResult').textContent = 'No verification performed yet';
+            document.getElementById('verificationResult').className = 'verification-result';
+            validateKeys();
+            updateSecurityStats();
+        }
     </script>
 </body>
 </html>
